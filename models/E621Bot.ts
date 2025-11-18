@@ -1,15 +1,17 @@
 import { Bot } from "grammy";
 import { E621RequestBuilder } from "./E621RequestBuilder.ts";
-import * as urls from "../constants/urls.ts";
 
 export class E621Bot extends Bot {
   telegramtelegramApiKey: string;
   e621ApiKey: string;
+  hits: number;
   constructor(
     telegramApiKey: string,
     e621ApiKey: string,
+    hits: number = 0,
   ) {
     super(telegramApiKey);
+    this.hits = hits;
     this.telegramtelegramApiKey = telegramApiKey;
     this.e621ApiKey = e621ApiKey;
   }
@@ -44,10 +46,8 @@ export class E621Bot extends Bot {
         continue;
       }
 
-      if (/(score|favcount|random|🎲|hot|🔥)/.test(queryTags[tag])) {
-        (queryTags[tag] === '🔥') ? request_builder.order = urls.order.hot : request_builder.order = `order:${queryTags[tag]}`;
-        (queryTags[tag] === '🎲') ? request_builder.order = urls.order.random : request_builder.order = `random:${queryTags[tag]}`
-        continue;
+      if (/(score|favcount|random|hot|)/.test(queryTags[tag])) {
+        request_builder.order = `order:${queryTags[tag]}`;
       }
 
       if (/(jpg|png|gif|mp4|webm)/.test(queryTags[tag])) {
@@ -56,7 +56,7 @@ export class E621Bot extends Bot {
       }
       parsedTags.push(queryTags[tag]);
     }
-    request_builder.tags = parsedTags
+    request_builder.tags = parsedTags;
     return await request_builder;
   }
 }
