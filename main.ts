@@ -1,6 +1,6 @@
 import { InlineQueryResult } from "grammy/types";
 import { E621Bot } from "./models/E621Bot.ts";
-import { Bot, InlineQueryResultBuilder } from "grammy";
+import { InlineQueryResultBuilder } from "grammy";
 import { helpString, infoString, startString } from "./constants/strings.ts";
 import { E621RequestBuilder } from "./models/E621RequestBuilder.ts";
 import { API_PAGE_SIZE, IMAGE_LOAD_COUNT } from "./constants/numbers.ts";
@@ -31,7 +31,8 @@ if (import.meta.main) {
 
   // INLINE QUERIES
   yiffBot.on("inline_query", async (ctx) => {
-    console.log(ctx.inlineQuery.query);
+    yiffBot.hits++;
+    console.log(yiffBot.hits);
     // Assume we will be getting pages of results
     let moreApiPages = true;
     const request = await yiffBot.parseInlineQuery(
@@ -54,7 +55,7 @@ if (import.meta.main) {
     // The offset in the current batch of results
     const offsetInCurrentApiPage = currentTelegramOffset % API_PAGE_SIZE;
     const inlineQueryResults: Array<InlineQueryResult> = [];
-    console.log(request.page);
+    // console.log(request.page);
     while (
       inlineQueryResults.length < (IMAGE_LOAD_COUNT + offsetInCurrentApiPage) &&
       moreApiPages
@@ -153,7 +154,7 @@ if (import.meta.main) {
     await ctx.answerInlineQuery(currentResults, {
       next_offset: nextTelegramOffset,
       is_personal: true,
-      cache_time: 600
+      cache_time: 300
     });
   });
 
