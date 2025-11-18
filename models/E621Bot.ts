@@ -1,5 +1,6 @@
 import { Bot } from "grammy";
 import { E621RequestBuilder } from "./E621RequestBuilder.ts";
+import * as urls from "../constants/urls.ts";
 
 export class E621Bot extends Bot {
   telegramtelegramApiKey: string;
@@ -43,8 +44,9 @@ export class E621Bot extends Bot {
         continue;
       }
 
-      if (/(score|favcount|random|hot)/.test(queryTags[tag])) {
-        request_builder.order = `order:${queryTags[tag]}`;
+      if (/(score|favcount|random|🎲|hot|🔥)/.test(queryTags[tag])) {
+        (queryTags[tag] === '🔥') ? request_builder.order = urls.order.hot : request_builder.order = `order:${queryTags[tag]}`;
+        (queryTags[tag] === '🎲') ? request_builder.order = urls.order.random : request_builder.order = `random:${queryTags[tag]}`
         continue;
       }
 
