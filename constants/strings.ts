@@ -37,3 +37,11 @@ export const infoString = `
 This is the Yiff bot, use this bot to find the latest and greatest furry images from the interwebz.\n
 <b>It's important to know that a lot of these images are rated <u>EXPLICIT</u> and so this bot should not be used by anyone under the age of 18.</b>
 `;
+
+export const fileTypes = {
+    jpg: "jpg",
+    png: "png",
+    gif: "gif",
+    mp4: "mp4",
+    webm: "webm"
+}
