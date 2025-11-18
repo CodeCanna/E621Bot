@@ -4,8 +4,8 @@ import { E621RequestBuilder } from "./models/E621RequestBuilder.ts";
 
 Deno.test(function buildUrlTest() {
   const testUrl =
-    "https://e621.net/posts.json?tags=dragon+rating:safe&limit=10";
-  const testUrlBuilder = new E621RequestBuilder("10");
+    "https://e621.net/posts.json?page=1&tags=dragon+rating:safe&limit=320";
+  const testUrlBuilder = new E621RequestBuilder();
   testUrlBuilder.tags = ["dragon"];
   testUrlBuilder.rating = "rating:safe";
   assertEquals(testUrlBuilder.buildUrl(), testUrl);
@@ -13,7 +13,7 @@ Deno.test(function buildUrlTest() {
 
 Deno.test(function tagStringTest() {
   const testTagString = "dragon+unicorn+rating:safe";
-  const testUrlBuilder = new E621RequestBuilder("10");
+  const testUrlBuilder = new E621RequestBuilder(10);
   testUrlBuilder.tags = ["dragon", "unicorn", "rating:safe"];
   assertEquals(testUrlBuilder.tagString(), testTagString);
 });
