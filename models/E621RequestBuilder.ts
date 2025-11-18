@@ -42,7 +42,7 @@ export class E621RequestBuilder {
       tagString += tags[i] + "+";
     }
     if (tagString.startsWith('+')) tagString = tagString.substring(1);
-    return tagString.slice(0, -1); // Remove the trailing + the building process
+    return tagString.slice(0, -1); // Remove the trailing + from the building process
   }
 
   buildUrl() {
