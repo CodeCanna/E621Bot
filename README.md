@@ -30,12 +30,12 @@ If you want to run you own version of the bot you can download the source code.
 Once you download the source code and you have [Deno](https://deno.com/) installed you need to make a file to store your API keys in.
 
 ## API Keys
-You should have gotten an API key from the Bot Father on Telegram to run your bot, and an E621 API key to get data from e621.  Take those two keys and stick them in a `.txt` file in any order, **nothing else should be in the file except your the API keys!!**.  You can name the text file anything you want just remember where you put it in your file system.
+You should have gotten an API key from the Bot Father on Telegram to run your bot, and an E621 API key to get data from [e621](https://e621.net).  Take those two keys and stick them in a `.txt` file in any order, **nothing else should be in the file except your the API keys!!**.  You can name the text file anything you want just remember where you put it in your file system.
 
 ## Run the Bot
 After you:
 * Download the source code
-* Install [Deno]("https://deno.com/")
+* Install [Deno](https://deno.com/)
 * Obtain your API keys
 * Create a text file containing your api keys
 
