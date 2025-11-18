@@ -25,6 +25,10 @@ if (import.meta.main) {
     );
   });
 
+  yiffBot.command("hits", async (ctx) => {
+    await ctx.reply(`I have processed ${yiffBot.hits} queries.`);
+  });
+
   yiffBot.command("help", async (ctx) => {
     await ctx.reply(helpString, { parse_mode: "HTML" });
   });
