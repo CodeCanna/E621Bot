@@ -41,9 +41,9 @@ This is the Yiff bot, use this bot to find the latest and greatest furry images 
 `;
 
 export const fileTypes = {
-    jpg: "jpg",
-    png: "png",
-    gif: "gif",
-    mp4: "mp4",
-    webm: "webm"
-}
+  jpg: "jpg",
+  png: "png",
+  gif: "gif",
+  mp4: "mp4",
+  webm: "webm",
+};

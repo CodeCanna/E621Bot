@@ -49,3 +49,8 @@ After you:
 * Create a text file containing your api keys
 
  You are ready to run your bot!  Run the helper script and point it to the text file you created containing your keys.  `./run.sh /path/to/textfile/your_keys.txt`.  The bot should not be running.  Test it by trying to run `/start` in the chat with your bot in Telegram.
+
+# LIMITATIONS!!
+Due to limitations in Telegram posts with the **.swf** and **.webp** file types won't show up in the bot.
+
+Due to limitations in Telegram bots can't send files more than **50Mb** in size; so **.mp4** files with a file size of more than **50Mb** will send the e621 link that points to that post, instead of the image.
