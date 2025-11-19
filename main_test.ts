@@ -51,3 +51,8 @@ Deno.test(async function calcMegabytesTest() {
   const testValue = 1024; // bytes
   await assertEquals(Math.ceil(testBot.calcMegabytes(testValue)), 1);
 });
+
+Deno.test(async function buildBlacklistRegexTest() {
+  const testBot = new E621Bot("TEST_TOKEN", "TEST_TOKEN", 0, ["feces", "murder", "waterworks"]);
+  await assertEquals(testBot.buildBlacklistRegex(), /(feces|murder|waterworks)/);
+});
