@@ -58,8 +58,7 @@ export const blacklist: string[] = [
   "fart",
   "farting_on_face",
   "rape",
-  "inflation",
   "diaper",
   "snuff",
-  "morbidly_obese"
+  "morbidly_obese",
 ];
