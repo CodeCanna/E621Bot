@@ -38,6 +38,11 @@ if (import.meta.main) {
     // Increase the hit counter
     yiffBot.hits++;
 
+    // Get the current offset from Telegram
+    const currentTelegramOffset = ctx.inlineQuery.offset
+      ? parseInt(ctx.inlineQuery.offset, 10)
+      : 0;
+
     // Set blacklist back to zero after every call
     yiffBot.blacklistedResults = 0;
     console.log(yiffBot.hits);
@@ -49,23 +54,19 @@ if (import.meta.main) {
       new E621RequestBuilder(),
     );
 
+    // Calculate the page number to pull from the API
+    let apiPageToFetch =
+      Math.floor(currentTelegramOffset / numbers.API_PAGE_SIZE) + 1;
+    console.log(`Page: ${apiPageToFetch}`);
+
+    // Set our page number in the URL Builder
+    request.page = apiPageToFetch;
+    
     if (ctx.inlineQuery.query.length === 0) request.order = urls.date.today;
     const yiffRequest = await yiffBot.sendRequest(request.buildUrl());
     const yiffJson = await yiffRequest.json();
     console.log(request.buildUrl());
     // Handle offset
-
-    // Get the current offset from Telegram
-    const currentTelegramOffset = ctx.inlineQuery.offset
-      ? parseInt(ctx.inlineQuery.offset, 10)
-      : 0;
-
-    // Calculate the page number to pull from the API
-    let apiPageToFetch =
-      Math.floor(currentTelegramOffset / numbers.API_PAGE_SIZE) + 1;
-
-    // Set our page number in the URL Builder
-    request.page = apiPageToFetch;
 
     // The offset in the current batch of results
     const offsetInCurrentApiPage = currentTelegramOffset %
@@ -80,7 +81,6 @@ if (import.meta.main) {
         (numbers.IMAGE_LOAD_COUNT + offsetInCurrentApiPage) &&
       moreApiPages && yiffBot.blacklistedResults <= numbers.BLACKLIST_MAX_HITS
     ) {
-      
       // Check if this request contains data, if it's empty then we have reached the end
       if (yiffJson.posts.length === 0) {
         moreApiPages = false;
@@ -108,7 +108,7 @@ if (import.meta.main) {
             }
           }
         }
-        
+
         // Check filetype and build InlineQueryResult of that type
         switch (yiffJson.posts[post].file.ext) {
           case (strings.fileTypes.jpg): {
@@ -203,7 +203,7 @@ if (import.meta.main) {
     await ctx.answerInlineQuery(currentResults, {
       next_offset: nextTelegramOffset,
       is_personal: true,
-      cache_time: 0,
+      cache_time: 600,
     });
   });
 
