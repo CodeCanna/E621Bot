@@ -1,10 +1,11 @@
 import { InlineQueryResult } from "grammy/types";
 import { E621Bot } from "./models/E621Bot.ts";
 import { InlineQueryResultBuilder } from "grammy";
-import { E621RequestBuilder } from "./models/E621RequestBuilder.ts";
+import { E621UrlBuilderPosts } from "./models/E621UrlBuilderPosts.ts";
 import * as numbers from "./constants/numbers.ts";
 import * as urls from "./constants/urls.ts";
 import * as strings from "./constants/strings.ts";
+import { E621UrlBuilderPools } from "./models/E621RequestBuilderPools.ts";
 
 if (import.meta.main) {
   const yiffBot = new E621Bot(
@@ -34,7 +35,120 @@ if (import.meta.main) {
   });
 
   // INLINE QUERIES
+  yiffBot.inlineQuery(/pools search */, async (ctx) => {
+    console.log("Searching Pools!");
+
+    const queries = ctx.inlineQuery.query.replace("pools search ", "").split(
+      " ",
+    );
+
+    const urlBuilder = new E621UrlBuilderPools();
+
+    for (let i = 0; i < queries.length; i++) {
+      const query = i + 1;
+      switch (queries[i]) {
+        case "id": {
+          console.log("Pool Id query");
+          urlBuilder.search = urls.poolSearch.id;
+          urlBuilder.query = queries[i + 1];
+          console.log(urlBuilder.query);
+          break;
+        }
+        case "description": {
+          console.log(`Description query`);
+          urlBuilder.search = urls.poolSearch.descriptionMatches;
+          urlBuilder.query = queries[query];
+          break;
+        }
+        case "creator": {
+          // Process sub command
+          switch (queries[query]) {
+            case "id": {
+              const cidQuery = queries[query + 1]; // creator id query
+              const searchType = urls.poolSearch.creatorId;
+
+              urlBuilder.query = cidQuery;
+              urlBuilder.search = searchType;
+              console.log(`Creator Id`);
+              break;
+            }
+            case "name": {
+              const cnmQuery = queries[query + 1]; // creator name query
+              const searchType = urls.poolSearch.creatorName;
+
+              urlBuilder.query = cnmQuery;
+              urlBuilder.search = searchType;
+              break;
+            }
+          }
+          break;
+        }
+        case "active": {
+          urlBuilder.query = "true";
+          urlBuilder.search = urls.poolSearch.isActive;
+          break;
+        }
+        case "inactive": {
+          urlBuilder.query = "false";
+          urlBuilder.search = urls.poolSearch.isActive;
+          break;
+        }
+        case "category": {
+          const catQuery = queries[query + 1];
+          const searchType = urls.poolSearch.category;
+
+          urlBuilder.query = catQuery;
+          urlBuilder.search = searchType;
+          break;
+        }
+        case "order": {
+          // Subcommand
+          switch (queries[query]) {
+            case "name": {
+              // const orderNameQuery = queries[Number(query) + 1];
+              // const searchType = urls.poolSearch.order.name;
+
+              urlBuilder.query = queries[query];
+              urlBuilder.search = queries[i];
+              break;
+            }
+            case "created": {
+              // const createdAtQuery = queries[Number(query) +1];
+              // const searchType = urls.poolSearch.order.createdAt;
+
+              urlBuilder.query = `${queries[query]}_at`;
+              urlBuilder.search = queries[i];
+              break;
+            }
+            case "updated": {
+              // const updatedAtQuery = queries[Number(query) + 1];
+              // const searchType = urls.poolSearch.order.updatedAt;
+
+              urlBuilder.query = `${queries[query]}_at`;
+              urlBuilder.search = queries[i];
+              break;
+            }
+            case "count": {
+              urlBuilder.query = urls.poolSearch.order.postCount;
+              urlBuilder.search = queries[i];
+            }
+          }
+          break;
+        }
+      }
+    }
+
+    console.log(urlBuilder.buildUrl());
+
+    const poolRequest = await yiffBot.sendRequest(urlBuilder.buildUrl());
+    const poolJson = await poolRequest.json();
+
+    console.log(poolJson);
+  });
+
   yiffBot.on("inline_query", async (ctx) => {
+    // Stop processing if user types in "pools search"
+    if (ctx.inlineQuery.query === "pools search") return;
     // Increase the hit counter
     yiffBot.hits++;
 
@@ -51,7 +165,7 @@ if (import.meta.main) {
     let moreApiPages = true;
     const request = await yiffBot.parseInlineQuery(
       ctx.inlineQuery.query,
-      new E621RequestBuilder(),
+      new E621UrlBuilderPosts(),
     );
 
     // Calculate the page number to pull from the API
@@ -61,7 +175,7 @@ if (import.meta.main) {
 
     // Set our page number in the URL Builder
     request.page = apiPageToFetch;
-    
+
     if (ctx.inlineQuery.query.length === 0) request.order = urls.date.today;
     const yiffRequest = await yiffBot.sendRequest(request.buildUrl());
     const yiffJson = await yiffRequest.json();
@@ -203,7 +317,7 @@ if (import.meta.main) {
     await ctx.answerInlineQuery(currentResults, {
       next_offset: nextTelegramOffset,
       is_personal: true,
-      cache_time: 600,
+      cache_time: 300,
     });
   });
 
