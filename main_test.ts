@@ -1,10 +1,11 @@
 import { assertEquals } from "@std/assert";
 import { E621Bot } from "./models/E621Bot.ts";
 import { E621RequestBuilder } from "./models/E621RequestBuilder.ts";
+import { API_PAGE_SIZE } from "./constants/numbers.ts";
 
 Deno.test(function buildUrlTest() {
   const testUrl =
-    "https://e621.net/posts.json?page=1&tags=dragon+rating:safe&limit=320";
+    `https://e621.net/posts.json?page=1&tags=dragon+rating:safe&limit=${API_PAGE_SIZE}`;
   const testUrlBuilder = new E621RequestBuilder();
   testUrlBuilder.tags = ["dragon"];
   testUrlBuilder.rating = "rating:safe";
@@ -53,6 +54,13 @@ Deno.test(async function calcMegabytesTest() {
 });
 
 Deno.test(async function buildBlacklistRegexTest() {
-  const testBot = new E621Bot("TEST_TOKEN", "TEST_TOKEN", 0, ["feces", "murder", "waterworks"]);
-  await assertEquals(testBot.buildBlacklistRegex(), /(feces|murder|waterworks)/);
+  const testBot = new E621Bot("TEST_TOKEN", "TEST_TOKEN", 0, 0, [
+    "feces",
+    "murder",
+    "waterworks",
+  ]);
+  await assertEquals(
+    testBot.buildBlacklistRegex(),
+    /(feces|murder|waterworks)/,
+  );
 });
