@@ -66,7 +66,6 @@ export class E621Bot extends Bot {
 
     // Check for key words and build key word tags as needed
     for (const tag in queryTags) {
-      // if (this.blacklist.length !== 0 && this.buildBlacklistRegex()?.test(queryTags[tag])) continue;
       if (
         /(today|yesterday|[0-9]{4}-[0-9]{2}-[0-9]{2})/.test(queryTags[tag])
       ) {
