@@ -1,7 +1,8 @@
 import { Bot } from "grammy";
-import { E621RequestBuilder } from "./E621RequestBuilder.ts";
+import { E621UrlBuilderPosts } from "./E621UrlBuilderPosts.ts";
 import { ONE_MEGABYTE, REQUEST_TIME_LIMIT} from "../constants/numbers.ts";
 import { blacklist as bl } from "../constants/strings.ts";
+import { E621UrlBuilderPools } from "./E621RequestBuilderPools.ts";
 
 /**
  * E621Bot can get streams of images based on a users inline query
@@ -56,8 +57,8 @@ export class E621Bot extends Bot {
    */
   async parseInlineQuery(
     query: string,
-    request_builder: E621RequestBuilder,
-  ): Promise<E621RequestBuilder> {
+    urlBuilder: E621UrlBuilderPosts,
+  ): Promise<E621UrlBuilderPosts> {
     // Parse the query string by spaces
     const queryTags: string[] = query.toLowerCase().split(" ");
 
@@ -69,28 +70,32 @@ export class E621Bot extends Bot {
       if (
         /(today|yesterday|[0-9]{4}-[0-9]{2}-[0-9]{2})/.test(queryTags[tag])
       ) {
-        request_builder.date = `date:${queryTags[tag]}`;
+        urlBuilder.date = `date:${queryTags[tag]}`;
         continue;
       }
 
       if (/(safe|questionable|explicit)/.test(queryTags[tag])) {
-        request_builder.rating = `rating:${queryTags[tag]}`;
+        urlBuilder.rating = `rating:${queryTags[tag]}`;
         continue;
       }
 
       if (/(score|favcount|random|hot)/.test(queryTags[tag])) {
-        request_builder.order = `order:${queryTags[tag]}`;
+        urlBuilder.order = `order:${queryTags[tag]}`;
         continue;
       }
 
       if (/(jpg|png|gif|mp4|webm)/.test(queryTags[tag])) {
-        request_builder.fileType = `type:${queryTags[tag]}`;
+        urlBuilder.fileType = `type:${queryTags[tag]}`;
         continue;
       }
       parsedTags.push(queryTags[tag]);
     }
-    request_builder.tags = parsedTags;
-    return await request_builder;
+    urlBuilder.tags = parsedTags;
+    return await urlBuilder;
+  }
+
+  async parseInlineQueryPools(query: string, urlBuilder: E621UrlBuilderPools): E621UrlBuilderPools {
+    // put logic in main for pools here
   }
 
   /**
