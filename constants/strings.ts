@@ -64,3 +64,5 @@ export const blacklist: string[] = [
   "hyper_feces",
   "eating_feces"
 ];
+
+export const keywordsRegex = "(id|creator|active|inactive|category|order)";
