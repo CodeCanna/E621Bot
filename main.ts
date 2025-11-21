@@ -38,112 +38,14 @@ if (import.meta.main) {
   yiffBot.inlineQuery(/search pools */, async (ctx) => {
     console.log("Searching Pools!");
 
-    const queries = ctx.inlineQuery.query.replace("pools search ", "").split(
-      " ",
-    );
-
-    const urlBuilder = new E621UrlBuilderPools();
-
-    for (let i = 0; i < queries.length; i++) {
-      const query = i + 1;
-      switch (queries[i]) {
-        case "id": {
-          console.log("Pool Id query");
-          urlBuilder.search = urls.poolSearch.id;
-          urlBuilder.query = queries[i + 1];
-          console.log(urlBuilder.query);
-          break;
-        }
-        case "description": {
-          console.log(`Description query`);
-          urlBuilder.search = urls.poolSearch.descriptionMatches;
-          urlBuilder.query = queries[query];
-          break;
-        }
-        case "creator": {
-          // Process sub command
-          switch (queries[query]) {
-            case "id": {
-              const cidQuery = queries[query + 1]; // creator id query
-              const searchType = urls.poolSearch.creatorId;
-
-              urlBuilder.query = cidQuery;
-              urlBuilder.search = searchType;
-              console.log(`Creator Id`);
-              break;
-            }
-            case "name": {
-              const cnmQuery = queries[query + 1]; // creator name query
-              const searchType = urls.poolSearch.creatorName;
-
-              urlBuilder.query = cnmQuery;
-              urlBuilder.search = searchType;
-              break;
-            }
-          }
-          break;
-        }
-        case "active": {
-          urlBuilder.query = "true";
-          urlBuilder.search = urls.poolSearch.isActive;
-          break;
-        }
-        case "inactive": {
-          urlBuilder.query = "false";
-          urlBuilder.search = urls.poolSearch.isActive;
-          break;
-        }
-        case "category": {
-          const catQuery = queries[query + 1];
-          const searchType = urls.poolSearch.category;
-
-          urlBuilder.query = catQuery;
-          urlBuilder.search = searchType;
-          break;
-        }
-        case "order": {
-          // Subcommand
-          switch (queries[query]) {
-            case "name": {
-              // const orderNameQuery = queries[Number(query) + 1];
-              // const searchType = urls.poolSearch.order.name;
-
-              urlBuilder.query = queries[query];
-              urlBuilder.search = queries[i];
-              break;
-            }
-            case "created": {
-              // const createdAtQuery = queries[Number(query) +1];
-              // const searchType = urls.poolSearch.order.createdAt;
-
-              urlBuilder.query = `${queries[query]}_at`;
-              urlBuilder.search = queries[i];
-              break;
-            }
-            case "updated": {
-              // const updatedAtQuery = queries[Number(query) + 1];
-              // const searchType = urls.poolSearch.order.updatedAt;
-
-              urlBuilder.query = `${queries[query]}_at`;
-              urlBuilder.search = queries[i];
-              break;
-            }
-            case "count": {
-              urlBuilder.query = urls.poolSearch.order.postCount;
-              urlBuilder.search = queries[i];
-            }
-          }
-          break;
-        }
-      }
-    }
+    const urlBuilder = yiffBot.parseInlineQueryPools(ctx.inlineQuery.query, new E621UrlBuilderPools());
 
     console.log(urlBuilder.buildUrl());
 
-    const poolRequest = await yiffBot.sendRequest(urlBuilder.buildUrl());
-    const poolJson = await poolRequest.json();
+    // const poolRequest = await yiffBot.sendRequest(urlBuilder.buildUrl());
+    // const poolJson = await poolRequest.json();
 
-    console.log(poolJson);
+    // console.log(poolJson);
   });
 
   yiffBot.on("inline_query", async (ctx) => {
@@ -320,8 +222,8 @@ if (import.meta.main) {
       cache_time: 300,
       button: {
         text: "Login",
-        start_parameter: "login"
-      }
+        start_parameter: "login",
+      },
     });
   });
 

@@ -1,8 +1,9 @@
 import { Bot } from "grammy";
 import { E621UrlBuilderPosts } from "./E621UrlBuilderPosts.ts";
-import { ONE_MEGABYTE, REQUEST_TIME_LIMIT} from "../constants/numbers.ts";
+import { ONE_MEGABYTE, REQUEST_TIME_LIMIT } from "../constants/numbers.ts";
 import { blacklist as bl } from "../constants/strings.ts";
 import { E621UrlBuilderPools } from "./E621RequestBuilderPools.ts";
+import { poolSearch } from "../constants/urls.ts";
 
 /**
  * E621Bot can get streams of images based on a users inline query
@@ -55,10 +56,10 @@ export class E621Bot extends Bot {
    * @param request_builder
    * @returns
    */
-  async parseInlineQuery(
+  parseInlineQuery(
     query: string,
     urlBuilder: E621UrlBuilderPosts,
-  ): Promise<E621UrlBuilderPosts> {
+  ): E621UrlBuilderPosts {
     // Parse the query string by spaces
     const queryTags: string[] = query.toLowerCase().split(" ");
 
@@ -91,11 +92,131 @@ export class E621Bot extends Bot {
       parsedTags.push(queryTags[tag]);
     }
     urlBuilder.tags = parsedTags;
-    return await urlBuilder;
+    return urlBuilder;
   }
 
-  async parseInlineQueryPools(query: string, urlBuilder: E621UrlBuilderPools): E621UrlBuilderPools {
+  parseInlineQueryPools(
+    query: string,
+    urlBuilder: E621UrlBuilderPools,
+  ): E621UrlBuilderPools {
     // put logic in main for pools here
+    const queries = query.replace("pools search ", "").split(" ");
+
+    for (let i = 0; i < queries.length; i++) {
+      const query = i + 1;
+      switch (queries[i]) {
+        case "id": {
+          console.log("Pool Id query");
+          urlBuilder.search = poolSearch.id;
+          urlBuilder.query = queries[i + 1];
+          break;
+        }
+        case "description": {
+          console.log(`Description query`);
+          let queryString = "";
+          let index = 0;
+          const queryArray = [];
+          // Check if next index exists yet
+          if (queries[query + index]) {
+            while (queries[query + index] != undefined) {
+              queryArray.push(queries[query + index++]);
+            }
+          }
+
+          queryString = queryArray.join("+");
+          urlBuilder.search = poolSearch.descriptionMatches;
+          urlBuilder.query = queryString;
+          break;
+        }
+        case "creator": {
+          // Process sub command
+          switch (queries[query]) {
+            case "id": {
+              const cidQuery = queries[query + 1]; // creator id query
+              const searchType = poolSearch.creatorId;
+
+              urlBuilder.query = cidQuery;
+              urlBuilder.search = searchType;
+              console.log(`Creator Id: ${urlBuilder.search}`);
+              break;
+            }
+            case "name": {
+              const cnmQuery = queries[query + 1]; // creator name query
+              const searchType = poolSearch.creatorName;
+
+              urlBuilder.query = cnmQuery;
+              urlBuilder.search = searchType;
+              break;
+            }
+          }
+          break;
+        }
+        case "active": {
+          urlBuilder.query = "true";
+          urlBuilder.search = poolSearch.isActive;
+          break;
+        }
+        case "inactive": {
+          urlBuilder.query = "false";
+          urlBuilder.search = poolSearch.isActive;
+          break;
+        }
+        case "category": {
+          let catQuery = "";
+          const searchType = poolSearch.category;
+          // Process subcommands
+          switch (queries[query + 1]) {
+            case "series": {
+              catQuery = "series";
+              break;
+            }
+            case "collection": {
+              catQuery = "collection";
+              break;
+            }
+          }
+
+          urlBuilder.query = catQuery;
+          urlBuilder.search = searchType;
+          break;
+        }
+        case "order": {
+          // Subcommand
+          switch (queries[query]) {
+            case "name": {
+              // const orderNameQuery = queries[Number(query) + 1];
+              // const searchType = urls.poolSearch.order.name;
+
+              urlBuilder.query = queries[query];
+              urlBuilder.search = queries[i];
+              break;
+            }
+            case "created": {
+              // const createdAtQuery = queries[Number(query) +1];
+              // const searchType = urls.poolSearch.order.createdAt;
+
+              urlBuilder.query = `${queries[query]}_at`;
+              urlBuilder.search = queries[i];
+              break;
+            }
+            case "updated": {
+              // const updatedAtQuery = queries[Number(query) + 1];
+              // const searchType = urls.poolSearch.order.updatedAt;
+
+              urlBuilder.query = `${queries[query]}_at`;
+              urlBuilder.search = queries[i];
+              break;
+            }
+            case "count": {
+              urlBuilder.query = poolSearch.order.postCount;
+              urlBuilder.search = queries[i];
+            }
+          }
+          break;
+        }
+      }
+    }
+    return urlBuilder
   }
 
   /**
