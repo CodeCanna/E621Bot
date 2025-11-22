@@ -4,6 +4,7 @@ import { ONE_MEGABYTE, REQUEST_TIME_LIMIT } from "../constants/numbers.ts";
 import { blacklist as bl } from "../constants/strings.ts";
 import { E621UrlBuilderPools } from "./E621RequestBuilderPools.ts";
 import { poolSearch } from "../constants/urls.ts";
+import { InlineQueryResult } from "grammy/types";
 
 /**
  * E621Bot can get streams of images based on a users inline query
@@ -14,12 +15,14 @@ export class E621Bot extends Bot {
   hits: number;
   blacklistedResults: number;
   blacklist: string[];
+  currentBatchOfResults?: Response // use this to store the current batch of results, and use a function to signal you need more results when the user has scrolled through all the ones inthe current batch.
   constructor(
     telegramApiKey: string,
     e621ApiKey: string,
     hits: number = 0,
     blacklistedResults: number = 0,
     blacklist: string[] = bl,
+    currentBatchOfResults?: Response
   ) {
     super(telegramApiKey);
     this.telegramtelegramApiKey = telegramApiKey;
@@ -27,6 +30,7 @@ export class E621Bot extends Bot {
     this.hits = hits;
     this.blacklistedResults = blacklistedResults;
     this.blacklist = blacklist;
+    this.currentBatchOfResults = currentBatchOfResults;
   }
 
   /**
@@ -48,6 +52,7 @@ export class E621Bot extends Bot {
       },
     });
     await sleep(REQUEST_TIME_LIMIT);
+    this.currentBatchOfResults = response;
     return response;
   }
 

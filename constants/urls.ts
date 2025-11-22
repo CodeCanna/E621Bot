@@ -7,8 +7,12 @@ export const baseUrl: string = "https://e621.net";
  * Different endpoints on e621
  */
 export const endpoint = {
-  posts: "/posts.json",
-  pools: "/pools.json",
+  posts: "/posts",
+  pools: "/pools",
+  json: {
+    posts: "/posts.json",
+    pools: "/pools.json"
+  }
 };
 
 /**

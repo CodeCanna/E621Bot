@@ -28,7 +28,7 @@ export class E621UrlBuilderPosts implements E621UrlBuilder {
    */
   constructor(
     baseUrl: string = urls.baseUrl,
-    endpoint: string = urls.endpoint.posts,
+    endpoint: string = urls.endpoint.json.posts,
     limit: number = API_PAGE_SIZE, // How many images to load at a time
     page: number = 1, // The page number to grab images from
     tags?: string[], // Tags Image, artist, species ALL THE TAGS!!

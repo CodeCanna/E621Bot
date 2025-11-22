@@ -38,7 +38,10 @@ if (import.meta.main) {
   yiffBot.inlineQuery(/search pools */, async (ctx) => {
     console.log("Searching Pools!");
 
-    const urlBuilder = yiffBot.parseInlineQueryPools(ctx.inlineQuery.query, new E621UrlBuilderPools());
+    const urlBuilder = yiffBot.parseInlineQueryPools(
+      ctx.inlineQuery.query,
+      new E621UrlBuilderPools(),
+    );
 
     console.log(urlBuilder.buildUrl());
 
@@ -62,9 +65,11 @@ if (import.meta.main) {
     // Set blacklist back to zero after every call
     yiffBot.blacklistedResults = 0;
     console.log(yiffBot.hits);
-    // yiffBot.blacklistedResults = 0;
+
     // Assume we will be getting pages of results
     let moreApiPages = true;
+
+    // Parse the inline query and create a new URL builder object based on the query
     const request = await yiffBot.parseInlineQuery(
       ctx.inlineQuery.query,
       new E621UrlBuilderPosts(),
@@ -79,8 +84,10 @@ if (import.meta.main) {
     request.page = apiPageToFetch;
 
     if (ctx.inlineQuery.query.length === 0) request.order = urls.date.today;
-    const yiffRequest = await yiffBot.sendRequest(request.buildUrl());
-    const yiffJson = await yiffRequest.json();
+    yiffBot.currentBatchOfResults = await yiffBot.sendRequest(
+      request.buildUrl(),
+    );
+    const yiffJson = await yiffBot.currentBatchOfResults?.json();
     console.log(request.buildUrl());
     // Handle offset
 
@@ -100,7 +107,10 @@ if (import.meta.main) {
       // Check if this request contains data, if it's empty then we have reached the end
       if (yiffJson.posts.length === 0) {
         moreApiPages = false;
+        console.log("END OF RESULTS!");
         break;
+      } else {
+        apiPageToFetch++;
       }
 
       // Looping through our posts
@@ -153,6 +163,11 @@ if (import.meta.main) {
             break;
           }
           case (strings.fileTypes.mp4): {
+            console.log(
+              `Mp4 File Size: ${
+                yiffBot.calcMegabytes(yiffJson.posts[post].file.size)
+              }`,
+            );
             const result =
               (yiffBot.calcMegabytes(yiffJson.posts[post].file.size) >
                   numbers.MAX_FILE_SIZE)
@@ -161,7 +176,11 @@ if (import.meta.main) {
                   `${yiffJson.posts[post].tags.artist[0]}`,
                   `${yiffJson.posts[post].file.url}`,
                   `${yiffJson.posts[post].preview.url}`,
-                ).text(`${urls.baseUrl}/${yiffJson.posts[post].id}`)
+                ).text(
+                  `${urls.baseUrl}${urls.endpoint.posts}/${
+                    yiffJson.posts[post].id
+                  }`,
+                )
                 : InlineQueryResultBuilder.videoMp4(
                   `${yiffJson.posts[post].id}`,
                   `${yiffJson.posts[post].tags.artist[0]}`,
@@ -175,7 +194,11 @@ if (import.meta.main) {
             const result = InlineQueryResultBuilder.photo(
               `${yiffJson.posts[post].id}`,
               `${yiffJson.posts[post].preview.url}`,
-            ).text(`${urls.baseUrl}/${yiffJson.posts[post].id}`);
+            ).text(
+              `${urls.baseUrl}${urls.endpoint.posts}/${
+                yiffJson.posts[post].id
+              }`,
+            );
             inlineQueryResults.push(result);
             break;
           }
@@ -186,12 +209,6 @@ if (import.meta.main) {
           }
         }
       }
-
-      if (yiffJson.posts.length < numbers.API_PAGE_SIZE) {
-        moreApiPages = false;
-      } else {
-        apiPageToFetch++;
-      }
     }
 
     const currentResults = inlineQueryResults.slice(
@@ -199,7 +216,6 @@ if (import.meta.main) {
       offsetInCurrentApiPage + numbers.IMAGE_LOAD_COUNT,
     );
 
-    let nextTelegramOffset = "";
     const totalRequestsInThisQuery = currentResults.length;
 
     const morePagesFound =
@@ -207,23 +223,20 @@ if (import.meta.main) {
       (moreApiPages ||
         inlineQueryResults.length >
           (offsetInCurrentApiPage + numbers.IMAGE_LOAD_COUNT));
-
+          
+    let nextTelegramOffset = "";
     if (morePagesFound) {
       nextTelegramOffset = String(
-        currentTelegramOffset + totalRequestsInThisQuery,
+        // Add the length of the slice we took from the results to the offset
+        currentTelegramOffset + currentResults.length,
       );
-    } else {
-      nextTelegramOffset = "";
     }
+
     console.log(nextTelegramOffset);
     await ctx.answerInlineQuery(currentResults, {
       next_offset: nextTelegramOffset,
       is_personal: true,
       cache_time: 300,
-      button: {
-        text: "Login",
-        start_parameter: "login",
-      },
     });
   });
 

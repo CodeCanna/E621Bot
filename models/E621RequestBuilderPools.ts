@@ -11,7 +11,7 @@ export class E621UrlBuilderPools implements E621UrlBuilder {
 
     constructor(
         baseUrl: string = urls.baseUrl,
-        endpoint: string = urls.endpoint.pools,
+        endpoint: string = urls.endpoint.json.pools,
         limit: number = API_PAGE_SIZE,
         search?: string,
         query?: string
@@ -23,6 +23,8 @@ export class E621UrlBuilderPools implements E621UrlBuilder {
         this.query = query;
     }
 
+    // TODO: This URL isn't correct because the user can search multiple things in the website, so we need to build this url with 
+    // all options available, multiple &search[] terms are allowed on e621 so lets support it.
     buildUrl(): string {
       return `${this.baseUrl}${this.endpoint}?limit=${this.limit}&search[${this.search}]=${this.query?.split(" ").join("+")}`;
     }
