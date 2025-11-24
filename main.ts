@@ -28,7 +28,7 @@ if (import.meta.main) {
   });
 
   yiffBot.command("hits", async (ctx) => {
-    await ctx.reply(`I have processed ${yiffBot.hits} queries.`);
+    await ctx.reply(`I have processed ${yiffBot.hits}, and I was last used at ${yiffBot.last_hit_time}`);
   });
 
   yiffBot.command("help", async (ctx) => {
@@ -111,19 +111,10 @@ if (import.meta.main) {
     });
   });
 
-  yiffBot.on("chosen_inline_result", async (ctx) => {
-    console.log(ctx.chosenInlineResult);
-    if (/sp/.test(ctx.chosenInlineResult.query)) {
-      await yiffBot.api.sendMessage(
-        ctx.chosenInlineResult.from.id,
-        `Here's a copy for yourself ${ctx.chosenInlineResult.from.username} from ${urls.baseUrl}${urls.endpoint.pools}/${ctx.chosenInlineResult.result_id} gotten with ${ctx.chosenInlineResult.query}`,
-      );
-      return;
-    }
-    await yiffBot.api.sendMessage(
-      ctx.chosenInlineResult.from.id,
-      `Here's a copy for yourself ${ctx.chosenInlineResult.from.username} from ${urls.baseUrl}${urls.endpoint.posts}/${ctx.chosenInlineResult.result_id} gotten with ${ctx.chosenInlineResult.query}`,
-    );
+  yiffBot.on("chosen_inline_result", () => {
+    const date = new Date(); // Create a new date object to get time and date from
+    yiffBot.hits++; // Increase hit count by one
+    yiffBot.last_hit_time = `${date.toDateString()} - ${date.getHours().toString()}:${date.getMinutes().toString()}:${date.getSeconds().toString()}`; // Set last_hit_time to right now
   });
 
   /**
@@ -138,12 +129,14 @@ if (import.meta.main) {
 
     // Stop processing if user types in "sp *"
     if (/sp */.test(ctx.inlineQuery.query)) return;
-    if (ctx.inlineQuery.query === "") urlBuilder.date = encodeURIComponent(urls.date.today);
-    // Increase the hit counter
-    yiffBot.hits++;
+    if (ctx.inlineQuery.query === "") {
+      urlBuilder.date = encodeURIComponent(urls.date.today);
+    }
 
     // Get the current offset from Telegram
-    const offset = ctx.inlineQuery.offset ? parseInt(ctx.inlineQuery.offset) : 0;
+    const offset = ctx.inlineQuery.offset
+      ? parseInt(ctx.inlineQuery.offset)
+      : 0;
     const nextOffset = offset + numbers.IMAGE_LOAD_COUNT;
     const page = Math.floor(offset / numbers.API_PAGE_SIZE) + 1;
     const pageOffset = offset % numbers.API_PAGE_SIZE;
@@ -206,7 +199,7 @@ if (import.meta.main) {
     if (inlineResults.length > 0) {
       resultBatch = inlineResults.slice(
         pageOffset,
-        pageOffset + numbers.IMAGE_LOAD_COUNT
+        pageOffset + numbers.IMAGE_LOAD_COUNT,
       );
     } else {
       resultBatch = inlineResults;

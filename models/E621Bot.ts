@@ -17,6 +17,7 @@ export class E621Bot extends Bot {
   telegramtelegramApiKey: string;
   e621ApiKey: string;
   hits: number;
+  last_hit_time?: string
   blacklistedResults: number;
   blacklist: string[];
   currentBatchOfResults?: Response; // use this to store the current batch of results, and use a function to signal you need more results when the user has scrolled through all the ones inthe current batch.
@@ -24,6 +25,7 @@ export class E621Bot extends Bot {
     telegramApiKey: string,
     e621ApiKey: string,
     hits: number = 0,
+    last_hit_time?: string,
     blacklistedResults: number = 0,
     blacklist: string[] = bl,
     currentBatchOfResults?: Response,
@@ -32,6 +34,7 @@ export class E621Bot extends Bot {
     this.telegramtelegramApiKey = telegramApiKey;
     this.e621ApiKey = e621ApiKey;
     this.hits = hits;
+    this.last_hit_time = last_hit_time;
     this.blacklistedResults = blacklistedResults;
     this.blacklist = blacklist;
     this.currentBatchOfResults = currentBatchOfResults;

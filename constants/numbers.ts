@@ -16,7 +16,7 @@ export const API_PAGE_SIZE = 320;
 /**
  * Amount of time in seconds the bot caches posts
  */
-export const POSTS_CACHE_TIME = 0;
+export const POSTS_CACHE_TIME = 300;
 
 /**
  * Maximum pools a the bot will pull per request

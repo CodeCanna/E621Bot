@@ -38,9 +38,9 @@ export const poolSearch = {
  * Post ratings
  */
 export const rating = { // The rating of a post or a rating to search by
-  safe: "rating:s",
-  questionable: "rating:q",
-  explicit: "rating:e",
+  safe: "rating:safe",
+  questionable: "rating:questionable",
+  explicit: "rating:explicit",
 };
 
 /**
