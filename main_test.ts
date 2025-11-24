@@ -2,10 +2,11 @@ import { assertEquals } from "@std/assert";
 import { E621Bot } from "./models/E621Bot.ts";
 import { E621UrlBuilderPosts } from "./models/E621UrlBuilderPosts.ts";
 import { API_PAGE_SIZE } from "./constants/numbers.ts";
+import * as urls from "./constants/urls.ts";
 
 Deno.test(function buildUrlTest() {
   const testUrl =
-    `https://e621.net/posts.json?page=1&tags=dragon+rating:safe&limit=${API_PAGE_SIZE}`;
+    `https://e621.net/posts.json?tags=dragon+rating:safe&page=1&limit=${API_PAGE_SIZE}`;
   const testUrlBuilder = new E621UrlBuilderPosts();
   testUrlBuilder.tags = ["dragon"];
   testUrlBuilder.rating = "rating:safe";
@@ -13,7 +14,7 @@ Deno.test(function buildUrlTest() {
 });
 
 Deno.test(function tagStringTest() {
-  const testTagString = "dragon+unicorn+rating:safe";
+  const testTagString = "?tags=dragon+unicorn+rating:safe";
   const testUrlBuilder = new E621UrlBuilderPosts();
   testUrlBuilder.tags = ["dragon", "unicorn", "rating:safe"];
   assertEquals(testUrlBuilder.tagString(), testTagString);
@@ -28,7 +29,7 @@ Deno.test(function getFileExtensionsTest() {
 Deno.test(async function parseInlineQueryTest() {
   const testUrlBuilder = new E621UrlBuilderPosts();
   testUrlBuilder.tags = ["dragon", "unicorn"];
-  testUrlBuilder.rating = "rating:safe";
+  testUrlBuilder.rating = encodeURIComponent(urls.rating.safe);
   const testBot = new E621Bot("TEST_TOKEN", "TEST_TOKEN");
   assertEquals(
     await testBot.parseInlineQuery(
@@ -54,7 +55,7 @@ Deno.test(async function calcMegabytesTest() {
 });
 
 Deno.test(async function buildBlacklistRegexTest() {
-  const testBot = new E621Bot("TEST_TOKEN", "TEST_TOKEN", 0, 0, [
+  const testBot = new E621Bot("TEST_TOKEN", "TEST_TOKEN", 0, "",0, [
     "feces",
     "murder",
     "waterworks",
