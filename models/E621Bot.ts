@@ -77,7 +77,7 @@ export class E621Bot extends Bot {
       if (
         /(today|yesterday|[0-9]{4}-[0-9]{2}-[0-9]{2})/.test(queryTags[tag])
       ) {
-        urlBuilder.date = encodeURIComponent(`date:${queryTags[tag]}`);
+        urlBuilder.date = `date:${queryTags[tag]}`;
         continue;
       }
 
@@ -241,23 +241,22 @@ export class E621Bot extends Bot {
 
   processPosts(posts: Post[]): InlineQueryResult[] {
     const inlineQueryResults: InlineQueryResult[] = [];
-    // posts_loop:
+
+    post_loop:
     for (const post in posts) {
-      // for (const key in posts[post].tags) {
-      //   if (posts[post].tags[key].length === 0) continue;
-      //   for (let i = 0; i < posts[post].tags[key].length; i++) {
-      //     // blacklistTagArray.push(yiffJson.posts[post].tags[key][i]);
-      //     if (
-      //       this.buildBlacklistRegex()?.test(
-      //         posts[post].tags[key][i],
-      //       )
-      //     ) {
-      //       // console.log("Blacklisted tag detected!");
-      //       this.blacklistedResults++;
-      //       continue posts_loop; // Continue from posts_loop
-      //     }
-      //   }
-      // }
+      const tagMatrix: string[][] = [];
+      Object.keys(posts[post].tags).forEach((key) => {
+        // Loop through the tags and add them to the tags array
+        tagMatrix.push(posts[post].tags[key]);
+      });
+      const tags = tagMatrix.flat();
+      
+      for (const tag in tags) {
+        if (this.buildBlacklistRegex()?.test(tags[tag])) {
+          console.log("Blacklisted found skipping post!");
+          continue post_loop;
+        }
+      }
       // Check filetype and build InlineQueryResult of that type
       switch (posts[post].fileType) {
         case (strings.fileTypes.jpg): {

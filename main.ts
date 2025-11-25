@@ -79,7 +79,7 @@ if (import.meta.main) {
 
     const pools: Pool[] = await Promise.all( // Promise all to await all of the sendRequest() calls
       poolJson.map(
-        async (pool: { post_ids: number[]; id: number; name: string }) => {
+        async (pool: Pool) => {
           const thumbnailRequestUrl =
             `${urls.baseUrl}${urls.endpoint.json.posts}?tags=id:${
               pool.post_ids[0]
@@ -144,8 +144,8 @@ if (import.meta.main) {
 
     // Stop processing if user types in "sp *"
     if (/sp */.test(ctx.inlineQuery.query)) return;
-    if (ctx.inlineQuery.query === "") {
-      urlBuilder.date = encodeURIComponent(urls.date.today);
+    if (ctx.inlineQuery.query == "") {
+      urlBuilder.date = urls.date.today;
     }
 
     // Get the current offset from Telegram
@@ -180,14 +180,7 @@ if (import.meta.main) {
     }
 
     const posts: Post[] = postsJson.map(
-      (
-        post: {
-          tags: { artist: string[] };
-          id: number;
-          file: { url: string; ext: string; size: number };
-          preview: { url: string };
-        },
-      ) => {
+      ( post: Post) => {
         return <Post> {
           title: post.tags.artist[0],
           id: post.id,
@@ -195,6 +188,7 @@ if (import.meta.main) {
           previewUrl: post.preview.url,
           fileType: post.file.ext,
           fileSize: post.file.size,
+          tags: post.tags
         };
       },
     );

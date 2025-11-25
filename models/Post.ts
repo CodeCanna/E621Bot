@@ -1,8 +1,27 @@
 export interface Post {
-    title: string,
-    id: number
+  title: string;
+  id: number;
+  url: string;
+  previewUrl: string;
+  fileType: string;
+  fileSize: number;
+  file: {
+    ext: string,
     url: string,
-    previewUrl: string,
-    fileType: string,
-    fileSize: number
+    size: number
+  };
+  preview: {
+    url: string
+  };
+  tags: {
+    general: string[];
+    copyright: string[];
+    contributor: string[];
+    species: string[];
+    character: string[];
+    artist: string[];
+    invalid: string[];
+    lore: string[];
+    meta: string[];
+  };
 }
