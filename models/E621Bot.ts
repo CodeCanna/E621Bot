@@ -1,15 +1,15 @@
 import { Bot, InlineQueryResultBuilder } from "grammy";
+import { InlineQueryResult } from "grammy/types";
 import { E621UrlBuilderPosts } from "./E621UrlBuilderPosts.ts";
 import { ONE_MEGABYTE } from "../constants/numbers.ts";
 import { blacklist as bl } from "../constants/strings.ts";
 import { E621UrlBuilderPools } from "./E621UrlBuilderPools.ts";
 import { poolSearch } from "../constants/urls.ts";
+import { Post } from "./interfaces.ts";
+import { Pool } from "./interfaces.ts";
 import * as strings from "../constants/strings.ts";
 import * as urls from "../constants/urls.ts";
 import * as numbers from "../constants/numbers.ts";
-import { InlineQueryResult } from "grammy/types";
-import { Post } from "./Post.ts";
-import { Pool } from "./Pool.ts";
 
 /**
  * E621Bot can get streams of images based on a users inline query
@@ -245,16 +245,17 @@ export class E621Bot extends Bot {
     post_loop:
     for (const post in posts) {
       const tagMatrix: string[][] = [];
-      Object.keys(posts[post].tags).forEach((key) => {
+      Object.keys(posts[post].tags).forEach((key: string) => {
         // Loop through the tags and add them to the tags array
         tagMatrix.push(posts[post].tags[key]);
       });
       const tags = tagMatrix.flat();
       
+      // Check for blacklisted tags
       for (const tag in tags) {
         if (this.buildBlacklistRegex()?.test(tags[tag])) {
           console.log("Blacklisted found skipping post!");
-          continue post_loop;
+          continue post_loop; // Skip this post if a blacklisted tag was found
         }
       }
       // Check filetype and build InlineQueryResult of that type
@@ -335,8 +336,8 @@ export class E621Bot extends Bot {
         String(pools[pool].id),
         pools[pool].name,
         {
-          thumbnail_url: pools[pool].thumbnailUrl
-        }
+          thumbnail_url: pools[pool].thumbnailUrl,
+        },
       ).text(`${pools[pool].url}`);
 
       inlineQueryResults.push(result);

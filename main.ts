@@ -1,8 +1,8 @@
 import { E621Bot } from "./models/E621Bot.ts";
 import { E621UrlBuilderPosts } from "./models/E621UrlBuilderPosts.ts";
 import { E621UrlBuilderPools } from "./models/E621UrlBuilderPools.ts";
-import { Post } from "./models/Post.ts";
-import { Pool } from "./models/Pool.ts";
+import { Post } from "./models/interfaces.ts";
+import { Pool } from "./models/interfaces.ts";
 import * as numbers from "./constants/numbers.ts";
 import * as urls from "./constants/urls.ts";
 import * as strings from "./constants/strings.ts";
