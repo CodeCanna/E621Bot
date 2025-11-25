@@ -32,7 +32,7 @@ export class E621UrlBuilderPools implements E621UrlBuilder {
       return `${this.baseUrl}${this.endpoint}?page=${this.page}&limit=${this.limit}&search[${this.search}]=${this.query?.split(" ").join("+")}`;
     }
 
-    getPoolsGallery(): string {
+    poolsGalleryUrl(): string {
         return `${this.baseUrl}${this.endpoint}?page=${this.page}&limit=${this.limit}`;
     }
 }
