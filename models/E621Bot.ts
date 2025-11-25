@@ -9,6 +9,7 @@ import * as urls from "../constants/urls.ts";
 import * as numbers from "../constants/numbers.ts";
 import { InlineQueryResult } from "grammy/types";
 import { Post } from "./Post.ts";
+import { Pool } from "./Pool.ts";
 
 /**
  * E621Bot can get streams of images based on a users inline query
@@ -17,7 +18,7 @@ export class E621Bot extends Bot {
   telegramtelegramApiKey: string;
   e621ApiKey: string;
   hits: number;
-  last_hit_time?: string
+  last_hit_time?: string;
   blacklistedResults: number;
   blacklist: string[];
   currentBatchOfResults?: Response; // use this to store the current batch of results, and use a function to signal you need more results when the user has scrolled through all the ones inthe current batch.
@@ -110,6 +111,22 @@ export class E621Bot extends Bot {
     for (let i = 0; i < queries.length; i++) {
       const query = i + 1;
       switch (queries[i]) {
+        case "name": {
+          let queryString = "";
+          let index = 0;
+          const queryArray = [];
+          // Check if next index exists yet
+          if (queries[query + index]) {
+            while (queries[query + index] != undefined) {
+              queryArray.push(queries[query + index++]);
+            }
+          }
+
+          queryString = queryArray.join("+");
+          urlBuilder.query = queryString;
+          urlBuilder.search = poolSearch.nameMatches;
+          break;
+        }
         case "id": {
           console.log("Pool Id query");
           urlBuilder.search = poolSearch.id;
@@ -169,24 +186,18 @@ export class E621Bot extends Bot {
           break;
         }
         case "category": {
-          let catQuery = "";
-          const searchType = poolSearch.category;
           // Process subcommands
-          switch (queries[query + 1]) {
+          switch (queries[query]) {
             case "series": {
-              catQuery = "series";
-              i++;
+              urlBuilder.query = queries[query];
               break;
             }
             case "collection": {
-              catQuery = "collection";
-              i++;
+              urlBuilder.query = queries[query];
               break;
             }
           }
-
-          urlBuilder.query = catQuery;
-          urlBuilder.search = searchType;
+          urlBuilder.search = poolSearch.category;
           break;
         }
         case "order": {
@@ -314,6 +325,22 @@ export class E621Bot extends Bot {
           break;
         }
       }
+    }
+    return inlineQueryResults;
+  }
+
+  processPools(pools: Pool[]): InlineQueryResult[] {
+    const inlineQueryResults: InlineQueryResult[] = [];
+    for (const pool in pools) {
+      const result = InlineQueryResultBuilder.article(
+        String(pools[pool].id),
+        pools[pool].name,
+        {
+          thumbnail_url: pools[pool].thumbnailUrl
+        }
+      ).text(`${pools[pool].url}`);
+
+      inlineQueryResults.push(result);
     }
     return inlineQueryResults;
   }

@@ -38,36 +38,36 @@ export const poolSearch = {
  * Post ratings
  */
 export const rating = { // The rating of a post or a rating to search by
-  safe: "rating:safe",
-  questionable: "rating:questionable",
-  explicit: "rating:explicit",
+  safe: encodeURIComponent("rating:safe"),
+  questionable: encodeURIComponent("rating:questionable"),
+  explicit: encodeURIComponent("rating:explicit"),
 };
 
 /**
  * Post filetypes
  */
 export const fileType = {
-  jpg: "type:jpg",
-  png: "type:png",
-  gif: "type:gif",
-  mp4: "type:mp4",
+  jpg: encodeURIComponent("type:jpg"),
+  png: encodeURIComponent("type:png"),
+  gif: encodeURIComponent("type:gif"),
+  mp4: encodeURIComponent("type:mp4"),
 };
 
 /**
  * Orders to load posts in
  */
 export const order = {
-  score: "order:score",
-  favcount: "order:favcount",
-  random: "order:random",
-  hot: "order%3Ahot",
+  score: encodeURIComponent("order:score"),
+  favcount: encodeURIComponent("order:favcount"),
+  random: encodeURIComponent("order:random"),
+  hot: encodeURIComponent("order:hot"),
 };
 
 /**
  * Date parameters to get posts by
  */
 export const date = {
-  today: "date:today",
-  yesterday: "date:yesterday",
-  byDate: "date:",
+  today: encodeURIComponent("date:today"),
+  yesterday: encodeURIComponent("date:yesterday"),
+  byDate: encodeURIComponent("date:"),
 };

@@ -1,9 +1,8 @@
-import { InlineQueryResult } from "grammy/types";
 import { E621Bot } from "./models/E621Bot.ts";
-import { InlineQueryResultBuilder } from "grammy";
 import { E621UrlBuilderPosts } from "./models/E621UrlBuilderPosts.ts";
 import { E621UrlBuilderPools } from "./models/E621UrlBuilderPools.ts";
 import { Post } from "./models/Post.ts";
+import { Pool } from "./models/Pool.ts";
 import * as numbers from "./constants/numbers.ts";
 import * as urls from "./constants/urls.ts";
 import * as strings from "./constants/strings.ts";
@@ -43,73 +42,80 @@ if (import.meta.main) {
    * Search for pools
    */
   yiffBot.inlineQuery(/sp */, async (ctx) => {
-    const currentTelegramOffset = ctx.inlineQuery.offset
-      ? parseInt(ctx.inlineQuery.offset, 10)
+    const urlBuilder = yiffBot.parseInlineQueryPools(
+      ctx.inlineQuery.query,
+      new E621UrlBuilderPools(),
+    );
+
+    // Get the current offset from Telegram
+    const offset = ctx.inlineQuery.offset
+      ? parseInt(ctx.inlineQuery.offset)
       : 0;
-    console.log(currentTelegramOffset);
 
-    // Calculate the page number to pull from the API
-    const apiPageToFetch =
-      Math.floor(currentTelegramOffset / numbers.POOLS_PAGE_SIZE) + 1;
+    const nextOffset = offset + numbers.POOLS_INLINE_LOAD_COUNT;
+    const page = Math.floor(offset / numbers.POOLS_PAGE_SIZE) + 1;
+    const pageOffset = offset % numbers.POOLS_PAGE_SIZE;
 
-    console.log(`Page: ${apiPageToFetch}`);
-    let urlBuilder;
-    ctx.inlineQuery.query
-      ? urlBuilder = yiffBot.parseInlineQueryPools(
-        ctx.inlineQuery.query,
-        new E621UrlBuilderPools(),
-      )
-      : urlBuilder = new E621UrlBuilderPools();
-    urlBuilder.page = apiPageToFetch;
+    console.log(`Page Number: ${page}`);
+    console.log(`Current Offset: ${offset}`);
+    console.log(`Next Offset: ${nextOffset}`);
+    console.log(`Page Offset: ${pageOffset}`);
+    // Set blacklist back to zero after every call
+    yiffBot.blacklistedResults = 0;
 
-    let poolRequest;
-    if (ctx.inlineQuery.query === "sp" || ctx.inlineQuery.query === "sp ") {
-      poolRequest = await yiffBot.sendRequest(urlBuilder.getPoolsGallery());
-    } else {
-      poolRequest = await yiffBot.sendRequest(urlBuilder.buildUrl());
-    }
+    urlBuilder.page = page;
 
-    console.log(poolRequest.url);
-    const poolJson = await poolRequest.json();
+    console.log(`Current URL: ${urlBuilder.buildUrl()}`);
 
+    // Grab our data
+    const poolsRequest = await yiffBot.sendRequest(urlBuilder.buildUrl());
+    const poolJson = await poolsRequest.json();
+
+    // If posts length is 0 we have reached the end of the data
     if (poolJson.length === 0) {
-      console.log("END OF CONTENT");
+      console.log("No Data Found");
       return;
     }
 
-    // Create a posts URLBuilder object to re-use in this loop
-    const postUrlBuilder = new E621UrlBuilderPosts();
-    const poolInlineQueryResults: Array<InlineQueryResult> = [];
-    for (const pool in poolJson) {
-      postUrlBuilder.tags = [`id:${poolJson[pool].post_ids[0]}`];
-      const thumbnailPostRequest = await yiffBot.sendRequest(
-        postUrlBuilder.buildUrl(),
+    const pools: Pool[] = await Promise.all( // Promise all to await all of the sendRequest() calls
+      poolJson.map(
+        async (pool: { post_ids: number[]; id: number; name: string }) => {
+          const thumbnailRequestUrl =
+            `${urls.baseUrl}${urls.endpoint.json.posts}?tags=id:${
+              pool.post_ids[0]
+            }`;
+
+          // console.log(thumbnailRequestUrl);
+          const thumbnailUrlRequest = await yiffBot.sendRequest(
+            thumbnailRequestUrl,
+          );
+          const thumbnailUrlJson = await thumbnailUrlRequest.json();
+          const thumbnailUrl: string = thumbnailUrlJson.posts[0].preview.url || ""; // Set to empty if undefined
+          return <Pool> {
+            id: pool.id,
+            name: pool.name,
+            url: `${urls.baseUrl}${urls.endpoint.pools}/${pool.id}`,
+            thumbnailUrl: thumbnailUrl, // Set the thumbnail image to the first image in the pool
+          };
+        },
+      ),
+    );
+
+    const poolResults = yiffBot.processPools(pools);
+    let poolBatch;
+    if (poolResults.length > 0) {
+      poolBatch = poolResults.slice(
+        pageOffset,
+        pageOffset + numbers.POOLS_INLINE_LOAD_COUNT,
       );
-      const thumbnailPostJson = await thumbnailPostRequest.json();
-      // const thumbnailUrl = thumbnailPostJson.posts[0].preview.url;
-      const result = InlineQueryResultBuilder.article(
-        String(poolJson[pool].id),
-        poolJson[pool].name,
-        { thumbnail_url: thumbnailPostJson.posts[0].preview.url },
-      ).text(`${urls.baseUrl}${urls.endpoint.pools}/${poolJson[pool].id}`);
-      // console.log(result);
-      poolInlineQueryResults.push(result);
+    } else {
+      poolBatch = poolResults;
     }
 
-    // Calculate next offset
-    const newOffset = currentTelegramOffset + numbers.POOLS_INLINE_LOAD_COUNT;
-
-    let poolSlice: Array<InlineQueryResult> = [];
-    if (currentTelegramOffset < poolInlineQueryResults.length) {
-      poolSlice = poolInlineQueryResults.slice(
-        currentTelegramOffset,
-        newOffset,
-      );
-    }
-
-    await ctx.answerInlineQuery(poolSlice, {
+    await ctx.answerInlineQuery(poolBatch, {
       cache_time: numbers.POOLS_CACHE_TIME,
-      next_offset: String(newOffset),
+      next_offset: String(nextOffset),
+      is_personal: true,
     });
   });
 
@@ -123,8 +129,7 @@ if (import.meta.main) {
     });
 
     yiffBot.hits++; // Increase hit count by one
-    yiffBot.last_hit_time =
-      `${date.toDateString()} - ${time}`; // Set last_hit_time to right now
+    yiffBot.last_hit_time = `${date.toDateString()} - ${time}`; // Set last_hit_time to right now
   });
 
   /**
@@ -165,7 +170,7 @@ if (import.meta.main) {
     // Grab our data
     const request = await yiffBot.sendRequest(urlBuilder.buildUrl());
     const requestJson = await request.json();
-    const postsJson = requestJson.posts;
+    const postsJson = requestJson.posts; // An array of 320 posts
 
     // console.log(postsJson[0]);
 
@@ -177,15 +182,9 @@ if (import.meta.main) {
     const posts: Post[] = postsJson.map(
       (
         post: {
-          tags: {
-            artist: string[];
-          };
+          tags: { artist: string[] };
           id: number;
-          file: {
-            size: number;
-            ext: string;
-            url: string;
-          };
+          file: { url: string; ext: string; size: number };
           preview: { url: string };
         },
       ) => {
