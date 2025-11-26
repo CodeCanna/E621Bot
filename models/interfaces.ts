@@ -57,4 +57,3 @@ export interface Preview {
   url: string;
   [key: string]: string
 }
-
