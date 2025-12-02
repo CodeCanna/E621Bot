@@ -11,8 +11,8 @@ export const endpoint = {
   pools: "/pools",
   json: {
     posts: "/posts.json",
-    pools: "/pools.json"
-  }
+    pools: "/pools.json",
+  },
 };
 
 /**
@@ -51,6 +51,7 @@ export const fileType = {
   png: encodeURIComponent("type:png"),
   gif: encodeURIComponent("type:gif"),
   mp4: encodeURIComponent("type:mp4"),
+  webm: encodeURIComponent("type:webm"),
 };
 
 /**
