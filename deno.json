@@ -1,7 +1,7 @@
 {
   "tasks": {
     "dev": "deno run --allow-net --allow-env --allow-read --watch main.ts",
-    "test": "deno test --allow-net --allow-env --allow-read main_test.ts",
+    "test": "deno test --allow-net --allow-env --allow-read ./tests/*",
     "bin": "deno compile --allow-net --allow-env --allow-read main.ts"
   },
   "imports": {
