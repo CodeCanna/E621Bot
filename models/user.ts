@@ -90,7 +90,8 @@ export function getUserByTelegramId(
       return {
         id: Number(queryResult.id),
         telegramId: Number(queryResult.telegram_id),
-        blacklist: String(queryResult.blacklist).split(",") || defaultBlacklist.split(","),
+        blacklist: String(queryResult.blacklist).split(",") ||
+          defaultBlacklist.split(","),
       };
     }
   } catch (err) {

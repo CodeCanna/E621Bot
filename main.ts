@@ -9,9 +9,9 @@ import * as strings from "./constants/strings.ts";
 import { existsSync } from "node:fs";
 import { createDatabase } from "./db/utils/createDb.ts";
 import {
-  userExists as userExists,
   getUserByTelegramId as getUserByTelegramId,
   insertUser as insertUser,
+  userExists as userExists,
 } from "./models/user.ts";
 
 if (import.meta.main) {
@@ -61,8 +61,10 @@ if (import.meta.main) {
       const user = getUserByTelegramId(ctx.from?.id!, strings.DB_FILE);
       if (user) {
         await ctx.reply(
-          `This is your current blacklist: \n <b>${user.blacklist.join("\n")}</b>`,
-          {parse_mode: "HTML"}
+          `This is your current blacklist: \n <b>${
+            user.blacklist.join("\n")
+          }</b>`,
+          { parse_mode: "HTML" },
         );
       }
     });

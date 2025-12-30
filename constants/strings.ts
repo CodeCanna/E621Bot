@@ -50,7 +50,8 @@ export const fileTypes = {
 
 export const keywordsRegex = "(id|creator|active|inactive|category|order)";
 export const BLACKLIST_PATH = "./blacklist.txt";
-export const defaultBlacklist = "gore,scat,watersports,young,-rating:s,loli,shota";
+export const defaultBlacklist =
+  "gore,scat,watersports,young,-rating:s,loli,shota";
 
 // DB strings
 export const SQL_BASEPATH = "db/sql";

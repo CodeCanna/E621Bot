@@ -2,11 +2,11 @@ import { existsSync } from "node:fs";
 import { TEST_DB_FILE } from "../constants/strings.ts";
 import { createBlacklistDb } from "../db/migration.ts";
 import {
-  userExists,
   deleteUser,
   getUserByTelegramId as getUserByTelegramId,
   insertUser,
   updateUser,
+  userExists,
 } from "../models/user.ts";
 import { User } from "../types/Blacklist.ts";
 import { assertEquals } from "@std/assert/equals";
