@@ -56,7 +56,7 @@ E621Bot comes with a number of commands.  These commands must be used in a direc
 
 ## Blacklist
 
-e621 has a **LOT** of tags, you may not be comfortable with all of them.  That's where your blacklist comes in.  You can use the blacklist to filter posts out with tags that you don't want to see.  e621 itself [has default blacklist settings](https://e621.net/help/blacklist) in place for all guest users, this is the same default blacklist the bot will start you out with when you first use the bot.
+e621 has a **LOT** of tags, you may not be comfortable with all of them.  That's where your blacklist comes in!  You can use the blacklist to filter posts out with tags that you don't want to see.  e621 itself [has default blacklist settings](https://e621.net/help/blacklist) in place for all guest users, this is the same default blacklist the bot will start you out with when you first use the bot.
 
 ## Editing your blacklist
 
@@ -66,10 +66,15 @@ You can edit this default list by using `/edit_blacklist`, you will be sent your
 
 If you want to run you own version of the bot you can download the source code.
 
-### Make sure you have Deno installed
+### Make sure you have all dependencies
 
-Once you download the source code and you have [Deno](https://deno.com/)
-installed you need to make a file to store your API keys in.
+#### Dependencies:
+- Deno 2.X
+- Sqlite3
+
+Once you download the source code and you have [Deno](https://deno.com/) installed you should get sqlite3
+- Ubuntu: `sudo apt install sqlite3`
+- Arch: ``
 
 ### API Keys
 
