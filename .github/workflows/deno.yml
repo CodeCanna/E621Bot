@@ -41,5 +41,5 @@ jobs:
       - name: Run tests
         run: deno test -A ./tests/*
         env:
-          TELEGRAM_BOT_KEY: ${{ secrets.TELEGRAM_BOT_KEY }}
-          E621_API_KEY: ${{ secrets.E621_API_KEY }}
+          TELEGRAM_BOT_KEY: ${{ env.TELEGRAM_BOT_KEY }}
+          E621_API_KEY: ${{ env.E621_API_KEY }}
