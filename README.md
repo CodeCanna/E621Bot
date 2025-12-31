@@ -1,6 +1,6 @@
 # Let's get the important stuff out of the way
 
-## This bot pulls images from a website that hosts images of all ratings, from images rated SFW to sexually explicit images to images depicting violence. As such this bot shouldn't be used by anyone under the age of 18. Also anyone contributing to this bot must be 18 years of age or older as well
+## This bot pulls from a website that hosts images of all ratings - from rated SFW, to sexually explicit images, to images depicting violence. As such, this bot shouldn't be used by anyone under the age of 18. Also, anyone contributing to this bot must be 18 years of age or older.
 
 ## Now that that's out of the way. Hi
 
@@ -60,7 +60,7 @@ e621 has a **LOT** of tags, you may not be comfortable with all of them.  That's
 
 ## Editing your blacklist
 
-You can edit this default list by using `/edit_blacklist`, you will be sent your current blacklist which you can copy and past into the chat.  From there you can edit it, and send it back to the bot.  The bot will save your blacklist, and display the updated blacklist so you can verify the changes.
+You can edit this default list by using `/edit_blacklist`, you will be sent your current blacklist which you can copy and paste into the chat.  From there you can edit it, and send it back to the bot.  The bot will save your blacklist, and display the updated blacklist so you can verify the changes.
 
 ## How do I setup the bot?
 
