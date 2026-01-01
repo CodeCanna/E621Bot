@@ -7,8 +7,7 @@ Deno.test(function buildUrlPostsTest() {
     `https://e621.net/posts.json?tags=dragon+rating:safe&page=1&limit=${API_PAGE_SIZE}`;
   const testUrlBuilder = new E621UrlBuilderPosts();
   testUrlBuilder.tags = ["dragon"];
-  testUrlBuilder.rating = "rating:safe";
-  assertEquals(testUrlBuilder.buildUrl(), testUrl);
+  assertEquals(testUrlBuilder.buildUrl("rating:safe"), testUrl);
 });
 
 Deno.test(function buildUrlPoolsTest() {

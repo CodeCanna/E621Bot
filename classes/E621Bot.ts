@@ -85,11 +85,6 @@ export class E621Bot extends Bot<e621BotContext> {
         continue;
       }
 
-      if (/(safe|questionable|explicit)/.test(queryTags[tag])) {
-        urlBuilder.rating = encodeURIComponent(`rating:${queryTags[tag]}`);
-        continue;
-      }
-
       if (/(score|favcount|random|hot)/.test(queryTags[tag])) {
         urlBuilder.order = encodeURIComponent(`order:${queryTags[tag]}`);
         continue;
@@ -245,7 +240,7 @@ export class E621Bot extends Bot<e621BotContext> {
       });
       const tags = tagMatrix.flat();
 
-      console.log(this.buildBlacklistRegex(blacklistedTags));
+      // console.log(this.buildBlacklistRegex(blacklistedTags));
 
       // Check for blacklisted tags
       for (const tag in tags) {

@@ -1,7 +1,7 @@
 import { Conversation } from "@grammyjs/conversations";
 import { Context } from "grammy";
 import { User } from "../types/Blacklist.ts";
-import { getUserByTelegramId, updateUser } from "../models/user.ts";
+import { getUserByTelegramId, updateBlacklist } from "../models/user.ts";
 import { DB_FILE } from "../constants/strings.ts";
 
 /**
@@ -30,11 +30,12 @@ export async function edit_blacklist(conversation: Conversation, ctx: Context) {
 
   const newUserData: User = {
     telegramId: ctx.from?.id!,
+    rating: "",
     blacklist: blacklist,
   };
 
   try {
-    updateUser(newUserData, DB_FILE);
+    updateBlacklist(newUserData, DB_FILE);
   } catch (err) {
     console.error(
       `Failed to save blacklist for ${ctx.from?.first_name} id ${ctx.from?.id}: ${err}`,
