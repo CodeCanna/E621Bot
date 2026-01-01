@@ -31,7 +31,7 @@ export function insertUser(user: User, dbFile: PathLike) {
  * @param dbFile
  * @returns StatementResultingChanges
  */
-export function updateUser(user: User, dbFile: PathLike) {
+export function updateBlacklist(user: User, dbFile: PathLike) {
   try {
     const db = new DatabaseSync(dbFile);
     const queryResult = db.prepare(
@@ -43,6 +43,32 @@ export function updateUser(user: User, dbFile: PathLike) {
     return queryResult;
   } catch (err) {
     console.error(`Failed to update user: ${err}`);
+    throw err;
+  }
+}
+
+/**
+ * 
+ * @param rating Rating the user picked
+ * @param id Telegram Id of user
+ * @param dbFile Path to DB file
+ * @returns StatementResultingChanges
+ */
+export function updateRating(id: number, rating: string, dbFile: PathLike) {
+  try {
+    const db = new DatabaseSync(dbFile);
+    const queryResult = db.prepare(
+      `UPDATE OR FAIL user_db SET rating = ? WHERE telegram_id = ?;`,
+    ).run(
+      rating,
+      id,
+    );
+    db.close();
+    return queryResult;
+  } catch (err) {
+    console.error(
+      `Failed to update rating for user ${id}: ${err}`,
+    );
     throw err;
   }
 }
@@ -90,6 +116,7 @@ export function getUserByTelegramId(
       return {
         id: Number(queryResult.id),
         telegramId: Number(queryResult.telegram_id),
+        rating: String(queryResult.rating),
         blacklist: String(queryResult.blacklist).split(",") ||
           defaultBlacklist.split(","),
       };
