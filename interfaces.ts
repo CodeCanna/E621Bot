@@ -3,7 +3,7 @@ export interface E621UrlBuilder {
   limit?: number;
   page?: number;
   endpoint: string;
-  buildUrl(): string;
+  buildUrl(rating?: string): string;
 }
 
 export interface Pool {
