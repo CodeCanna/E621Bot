@@ -10,8 +10,8 @@ import * as numbers from "../constants/numbers.ts";
  */
 Deno.test(function parseInlineQueryTest() {
   const testBot = new E621Bot(
-    Deno.env.get("TELEGRAM_BOT_KEY") || "",
-    Deno.env.get("E621_API_KEY") || "",
+    "TELEGRAM_BOT_KEY",
+    "E621_API_KEY",
   );
 
   // Create our test queries
@@ -21,9 +21,9 @@ Deno.test(function parseInlineQueryTest() {
   const dateQuery = "dragons 2024-10-10";
 
   // Rating query
-  const safeQuery = "dragons safe";
-  const questionableQuery = "dragons questionable";
-  const explicitQuery = "dragons explicit"; // e621 is Explicit by default
+  const safeQuery = "dragons";
+  const questionableQuery = "dragons";
+  const explicitQuery = "dragons"; // e621 is Explicit by default
 
   // Order query
   const scoreQuery = "dragons score";
@@ -41,7 +41,7 @@ Deno.test(function parseInlineQueryTest() {
   // Mixed search queries
   const mixedSearchQuery1 = "dragons today mp4";
   const mixedSearchQuery2 = "dragons random gif";
-  const mixedSearchQuery3 = "dragons questionable favcount";
+  const mixedSearchQuery3 = "dragons favcount";
 
   // Create test URL builders with processPosts()
   // Date Urlbuilders
@@ -131,11 +131,11 @@ Deno.test(function parseInlineQueryTest() {
 
   // Date urls
   const todayUrl =
-    `${postsUrl}dragons+${urls.date.today}&page=1&limit=${numbers.API_PAGE_SIZE}`;
+    `${postsUrl}dragons+${urls.date.today}+${urls.rating.safe}&page=1&limit=${numbers.API_PAGE_SIZE}`;
   const yesterdayUrl =
-    `${postsUrl}dragons+${urls.date.yesterday}&page=1&limit=${numbers.API_PAGE_SIZE}`;
+    `${postsUrl}dragons+${urls.date.yesterday}+${urls.rating.safe}&page=1&limit=${numbers.API_PAGE_SIZE}`;
   const dateUrl =
-    `${postsUrl}dragons+${urls.date.byDate}2024-10-10&page=1&limit=${numbers.API_PAGE_SIZE}`;
+    `${postsUrl}dragons+${urls.date.byDate}2024-10-10+${urls.rating.safe}&page=1&limit=${numbers.API_PAGE_SIZE}`;
 
   // Rating urls
   const safeUrl =
@@ -147,61 +147,61 @@ Deno.test(function parseInlineQueryTest() {
 
   // Order urls
   const scoreUrl =
-    `${postsUrl}dragons+${urls.order.score}&page=1&limit=${numbers.API_PAGE_SIZE}`;
+    `${postsUrl}dragons+${urls.order.score}+${urls.rating.safe}&page=1&limit=${numbers.API_PAGE_SIZE}`;
   const favcountUrl =
-    `${postsUrl}dragons+${urls.order.favcount}&page=1&limit=${numbers.API_PAGE_SIZE}`;
+    `${postsUrl}dragons+${urls.order.favcount}+${urls.rating.safe}&page=1&limit=${numbers.API_PAGE_SIZE}`;
   const randomUrl =
-    `${postsUrl}dragons+${urls.order.random}&page=1&limit=${numbers.API_PAGE_SIZE}`;
+    `${postsUrl}dragons+${urls.order.random}+${urls.rating.safe}&page=1&limit=${numbers.API_PAGE_SIZE}`;
   const hotUrl =
-    `${postsUrl}dragons+${urls.order.hot}&page=1&limit=${numbers.API_PAGE_SIZE}`;
+    `${postsUrl}dragons+${urls.order.hot}+${urls.rating.safe}&page=1&limit=${numbers.API_PAGE_SIZE}`;
 
   // File urls
   const jpgUrl =
-    `${postsUrl}dragons+${urls.fileType.jpg}&page=1&limit=${numbers.API_PAGE_SIZE}`;
+    `${postsUrl}dragons+${urls.fileType.jpg}+${urls.rating.safe}&page=1&limit=${numbers.API_PAGE_SIZE}`;
   const pngUrl =
-    `${postsUrl}dragons+${urls.fileType.png}&page=1&limit=${numbers.API_PAGE_SIZE}`;
+    `${postsUrl}dragons+${urls.fileType.png}+${urls.rating.safe}&page=1&limit=${numbers.API_PAGE_SIZE}`;
   const gifUrl =
-    `${postsUrl}dragons+${urls.fileType.gif}&page=1&limit=${numbers.API_PAGE_SIZE}`;
+    `${postsUrl}dragons+${urls.fileType.gif}+${urls.rating.safe}&page=1&limit=${numbers.API_PAGE_SIZE}`;
   const mp4Url =
-    `${postsUrl}dragons+${urls.fileType.mp4}&page=1&limit=${numbers.API_PAGE_SIZE}`;
+    `${postsUrl}dragons+${urls.fileType.mp4}+${urls.rating.safe}&page=1&limit=${numbers.API_PAGE_SIZE}`;
   const webmUrl =
-    `${postsUrl}dragons+${urls.fileType.webm}&page=1&limit=${numbers.API_PAGE_SIZE}`;
+    `${postsUrl}dragons+${urls.fileType.webm}+${urls.rating.safe}&page=1&limit=${numbers.API_PAGE_SIZE}`;
 
   // Mixed search urls
   const mixedSearchUrl1 =
-    `${postsUrl}dragons+${urls.date.today}+${urls.fileType.mp4}&page=1&limit=${numbers.API_PAGE_SIZE}`;
+    `${postsUrl}dragons+${urls.date.today}+${urls.fileType.mp4}+${urls.rating.safe}&page=1&limit=${numbers.API_PAGE_SIZE}`;
   const mixedSearchUrl2 =
-    `${postsUrl}dragons+${urls.fileType.gif}+${urls.order.random}&page=1&limit=${numbers.API_PAGE_SIZE}`;
+    `${postsUrl}dragons+${urls.fileType.gif}+${urls.order.random}+${urls.rating.safe}&page=1&limit=${numbers.API_PAGE_SIZE}`;
   const mixedSearchUrl3 =
-    `${postsUrl}dragons+${urls.rating.questionable}+${urls.order.favcount}&page=1&limit=${numbers.API_PAGE_SIZE}`;
+    `${postsUrl}dragons+${urls.order.favcount}+${urls.rating.safe}&page=1&limit=${numbers.API_PAGE_SIZE}`;
 
   // Date asserts
-  assertEquals(todayUrlBuilder.buildUrl(), todayUrl);
-  assertEquals(yesterdayUrlBuilder.buildUrl(), yesterdayUrl);
-  assertEquals(dateUrlBuilder.buildUrl(), dateUrl);
+  assertEquals(todayUrlBuilder.buildUrl(urls.rating.safe), todayUrl);
+  assertEquals(yesterdayUrlBuilder.buildUrl(urls.rating.safe), yesterdayUrl);
+  assertEquals(dateUrlBuilder.buildUrl(urls.rating.safe), dateUrl);
 
   // Rating asserts
-  assertEquals(safeUrlBuilder.buildUrl(), safeUrl);
-  assertEquals(questionableUrlBuilder.buildUrl(), questionableUrl);
-  assertEquals(explicitUrlBuilder.buildUrl(), explicitUrl);
+  assertEquals(safeUrlBuilder.buildUrl(urls.rating.safe), safeUrl);
+  assertEquals(questionableUrlBuilder.buildUrl(urls.rating.questionable), questionableUrl);
+  assertEquals(explicitUrlBuilder.buildUrl(urls.rating.explicit), explicitUrl);
 
   // Order asserts
-  assertEquals(scoreUrlBuilder.buildUrl(), scoreUrl);
-  assertEquals(favcountUrlBuilder.buildUrl(), favcountUrl);
-  assertEquals(randomUrlBuilder.buildUrl(), randomUrl);
-  assertEquals(hotUrlBuilder.buildUrl(), hotUrl);
+  assertEquals(scoreUrlBuilder.buildUrl(urls.rating.safe), scoreUrl);
+  assertEquals(favcountUrlBuilder.buildUrl(urls.rating.safe), favcountUrl);
+  assertEquals(randomUrlBuilder.buildUrl(urls.rating.safe), randomUrl);
+  assertEquals(hotUrlBuilder.buildUrl(urls.rating.safe), hotUrl);
 
   // Filetype asserts
-  assertEquals(jpgUrlBuilder.buildUrl(), jpgUrl);
-  assertEquals(pngUrlBuilder.buildUrl(), pngUrl);
-  assertEquals(gifUrlBuilder.buildUrl(), gifUrl);
-  assertEquals(mp4UrlBuilder.buildUrl(), mp4Url);
-  assertEquals(webmUrlBuilder.buildUrl(), webmUrl);
+  assertEquals(jpgUrlBuilder.buildUrl(urls.rating.safe), jpgUrl);
+  assertEquals(pngUrlBuilder.buildUrl(urls.rating.safe), pngUrl);
+  assertEquals(gifUrlBuilder.buildUrl(urls.rating.safe), gifUrl);
+  assertEquals(mp4UrlBuilder.buildUrl(urls.rating.safe), mp4Url);
+  assertEquals(webmUrlBuilder.buildUrl(urls.rating.safe), webmUrl);
 
   // Mixed search asserts
-  assertEquals(mixedSearchUrlBuilder1.buildUrl(), mixedSearchUrl1);
-  assertEquals(mixedSearchUrlBuilder2.buildUrl(), mixedSearchUrl2);
-  assertEquals(mixedSearchUrlBuilder3.buildUrl(), mixedSearchUrl3);
+  assertEquals(mixedSearchUrlBuilder1.buildUrl(urls.rating.safe), mixedSearchUrl1);
+  assertEquals(mixedSearchUrlBuilder2.buildUrl(urls.rating.safe), mixedSearchUrl2);
+  assertEquals(mixedSearchUrlBuilder3.buildUrl(urls.rating.safe), mixedSearchUrl3);
 });
 
 /**

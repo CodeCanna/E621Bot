@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert/equals";
 import { DatabaseSync } from "node:sqlite";
-import { createBlacklistDb } from "../db/migration.ts";
+import { createUserDb } from "../db/migration.ts";
 import { assertNotEquals } from "@std/assert/not-equals";
 import { TEST_DB_FILE } from "../constants/strings.ts";
 import { existsSync } from "node:fs";
@@ -10,7 +10,7 @@ if (!existsSync("db/test_db")) {
 }
 
 Deno.test(function testCreateBlacklistDb() {
-  createBlacklistDb(TEST_DB_FILE);
+  createUserDb(TEST_DB_FILE);
 
   // Get table
   const db = new DatabaseSync(TEST_DB_FILE);
