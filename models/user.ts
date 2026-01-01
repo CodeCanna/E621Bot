@@ -48,7 +48,6 @@ export function updateBlacklist(user: User, dbFile: PathLike) {
 }
 
 /**
- * 
  * @param rating Rating the user picked
  * @param id Telegram Id of user
  * @param dbFile Path to DB file

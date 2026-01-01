@@ -84,7 +84,11 @@ if (import.meta.main) {
         case "questionable":
         case "explicit": {
           try {
-            updateRating(ctx.from?.id!, encodeURIComponent(`rating:${ctx.match}`), DB_FILE);
+            updateRating(
+              ctx.from?.id!,
+              encodeURIComponent(`rating:${ctx.match}`),
+              DB_FILE,
+            );
             await ctx.reply(`Updated your rating to <b>${ctx.match}</b>.`, {
               parse_mode: "HTML",
             });
@@ -258,7 +262,9 @@ if (import.meta.main) {
       console.log(`Current URL: ${urlBuilder.buildUrl(user?.rating!)}`);
 
       // Grab our data
-      const request = await yiffBot.sendRequest(urlBuilder.buildUrl(user?.rating!));
+      const request = await yiffBot.sendRequest(
+        urlBuilder.buildUrl(user?.rating!),
+      );
       const requestJson = await request.json();
       const postsJson = requestJson.posts; // An array of 50 posts
 

@@ -45,7 +45,11 @@ match the key words and the tags in any way you like!
 
 ## Commands
 
-E621Bot comes with a number of commands.  These commands must be used in a direct chat with the bot.  As this bot is mostly an inline bot, you mostly interact with it by typing `@e621bot your query here` while in another chat to interact with it.  To use commands open a direct message chat with the bot, and from there you can use slash commands (`/command`).  e621Bot currently has 6 commands.
+E621Bot comes with a number of commands. These commands must be used in a direct
+chat with the bot. As this bot is mostly an inline bot, you mostly interact with
+it by typing `@e621bot your query here` while in another chat to interact with
+it. To use commands open a direct message chat with the bot, and from there you
+can use slash commands (`/command`). e621Bot currently has 6 commands.
 
 - `/start` Starts the bot
 - `/help` Show a help message
@@ -56,11 +60,19 @@ E621Bot comes with a number of commands.  These commands must be used in a direc
 
 ## Blacklist
 
-e621 has a **LOT** of tags, you may not be comfortable with all of them.  That's where your blacklist comes in!  You can use the blacklist to filter posts out with tags that you don't want to see.  e621 itself [has default blacklist settings](https://e621.net/help/blacklist) in place for all guest users, this is the same default blacklist the bot will start you out with when you first use the bot.
+e621 has a **LOT** of tags, you may not be comfortable with all of them. That's
+where your blacklist comes in! You can use the blacklist to filter posts out
+with tags that you don't want to see. e621 itself
+[has default blacklist settings](https://e621.net/help/blacklist) in place for
+all guest users, this is the same default blacklist the bot will start you out
+with when you first use the bot.
 
 ## Editing your blacklist
 
-You can edit this default list by using `/edit_blacklist`, you will be sent your current blacklist which you can copy and paste into the chat.  From there you can edit it, and send it back to the bot.  The bot will save your blacklist, and display the updated blacklist so you can verify the changes.
+You can edit this default list by using `/edit_blacklist`, you will be sent your
+current blacklist which you can copy and paste into the chat. From there you can
+edit it, and send it back to the bot. The bot will save your blacklist, and
+display the updated blacklist so you can verify the changes.
 
 ## How do I setup the bot?
 
@@ -69,10 +81,13 @@ If you want to run you own version of the bot you can download the source code.
 ### Make sure you have all dependencies
 
 #### Dependencies:
+
 - Deno 2.X
 - Sqlite3
 
-Once you download the source code and you have [Deno](https://deno.com/) installed you should get sqlite3
+Once you download the source code and you have [Deno](https://deno.com/)
+installed you should get sqlite3
+
 - Ubuntu: `sudo apt install sqlite3`
 - Arch: ``
 

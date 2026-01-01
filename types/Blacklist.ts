@@ -1,6 +1,6 @@
 export type User = {
   id?: number;
   telegramId: number;
-  rating: string,
+  rating: string;
   blacklist: string[];
 };

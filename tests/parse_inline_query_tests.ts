@@ -182,7 +182,10 @@ Deno.test(function parseInlineQueryTest() {
 
   // Rating asserts
   assertEquals(safeUrlBuilder.buildUrl(urls.rating.safe), safeUrl);
-  assertEquals(questionableUrlBuilder.buildUrl(urls.rating.questionable), questionableUrl);
+  assertEquals(
+    questionableUrlBuilder.buildUrl(urls.rating.questionable),
+    questionableUrl,
+  );
   assertEquals(explicitUrlBuilder.buildUrl(urls.rating.explicit), explicitUrl);
 
   // Order asserts
@@ -199,9 +202,18 @@ Deno.test(function parseInlineQueryTest() {
   assertEquals(webmUrlBuilder.buildUrl(urls.rating.safe), webmUrl);
 
   // Mixed search asserts
-  assertEquals(mixedSearchUrlBuilder1.buildUrl(urls.rating.safe), mixedSearchUrl1);
-  assertEquals(mixedSearchUrlBuilder2.buildUrl(urls.rating.safe), mixedSearchUrl2);
-  assertEquals(mixedSearchUrlBuilder3.buildUrl(urls.rating.safe), mixedSearchUrl3);
+  assertEquals(
+    mixedSearchUrlBuilder1.buildUrl(urls.rating.safe),
+    mixedSearchUrl1,
+  );
+  assertEquals(
+    mixedSearchUrlBuilder2.buildUrl(urls.rating.safe),
+    mixedSearchUrl2,
+  );
+  assertEquals(
+    mixedSearchUrlBuilder3.buildUrl(urls.rating.safe),
+    mixedSearchUrl3,
+  );
 });
 
 /**
