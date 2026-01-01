@@ -71,8 +71,8 @@ export class E621UrlBuilderPosts implements E621UrlBuilder {
    * Returns a URL built fromt he current state of the builder itself and a base URL
    * @returns string URL built from the current state of the builder
    */
-  buildUrl() {
-    return `${this.baseUrl}${this.endpoint}${this.tagString()}&page=${this.page}&limit=${this.limit}`;
+  buildUrl(rating: string) {
+    return `${this.baseUrl}${this.endpoint}${this.tagString()}+${rating}&page=${this.page}&limit=${this.limit}`;
   }
 
   /**
