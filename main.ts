@@ -11,8 +11,10 @@ import { createDatabase } from "./db/utils/createDb.ts";
 import {
   getUserByTelegramId as getUserByTelegramId,
   insertUser as insertUser,
+  updateRating,
   userExists as userExists,
 } from "./models/user.ts";
+import { DB_FILE } from "./constants/strings.ts";
 
 if (import.meta.main) {
   try {
@@ -71,6 +73,37 @@ if (import.meta.main) {
 
     yiffBot.command("edit_blacklist", async (ctx) => {
       await ctx.conversation.enter("edit_blacklist");
+    });
+
+    yiffBot.command("rating", async (ctx) => {
+      switch (ctx.match) {
+        case "s":
+        case "q":
+        case "e":
+        case "safe":
+        case "questionable":
+        case "explicit": {
+          try {
+            updateRating(ctx.from?.id!, encodeURIComponent(`rating:${ctx.match}`), DB_FILE);
+            await ctx.reply(`Updated your rating to <b>${ctx.match}</b>.`, {
+              parse_mode: "HTML",
+            });
+          } catch (err) {
+            console.error(
+              `Failed to update rating setting for user ${ctx.from?.id}: ${err}`,
+            );
+          }
+
+          break;
+        }
+        default: {
+          await ctx.reply(
+            `Invalid rating: <b>${ctx.match}</b>!  The rating must be s (safe), q (questionable), or e (explicit).`,
+            { parse_mode: "HTML" },
+          );
+          break;
+        }
+      }
     });
 
     yiffBot.command("help", async (ctx) => {
@@ -188,7 +221,10 @@ if (import.meta.main) {
     yiffBot.on("inline_query", async (ctx) => {
       // Create new user if not exists
       if (!userExists(ctx.from.id, strings.DB_FILE)) {
-        insertUser({ telegramId: ctx.from.id, blacklist: [] }, strings.DB_FILE);
+        insertUser(
+          { telegramId: ctx.from.id, blacklist: [], rating: "" },
+          strings.DB_FILE,
+        );
       }
       const user = getUserByTelegramId(ctx.from.id, strings.DB_FILE);
 
@@ -219,10 +255,10 @@ if (import.meta.main) {
 
       urlBuilder.page = page;
 
-      console.log(`Current URL: ${urlBuilder.buildUrl()}`);
+      console.log(`Current URL: ${urlBuilder.buildUrl(user?.rating!)}`);
 
       // Grab our data
-      const request = await yiffBot.sendRequest(urlBuilder.buildUrl());
+      const request = await yiffBot.sendRequest(urlBuilder.buildUrl(user?.rating!));
       const requestJson = await request.json();
       const postsJson = requestJson.posts; // An array of 50 posts
 
