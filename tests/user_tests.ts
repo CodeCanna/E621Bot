@@ -16,7 +16,7 @@ import { assertObjectMatch } from "@std/assert/object-match";
 const testUser: User = {
   id: 1,
   telegramId: 12345,
-  rating: "s",
+  rating: "rating%3Asafe",
   blacklist: [
     "gore",
     "scat",
