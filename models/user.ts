@@ -1,6 +1,6 @@
 import { PathLike } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
-import { User } from "../types/Blacklist.ts";
+import { User } from "../types/User.ts";
 import { defaultBlacklist } from "../constants/strings.ts";
 
 /**

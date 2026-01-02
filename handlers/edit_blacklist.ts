@@ -1,6 +1,6 @@
 import { Conversation } from "@grammyjs/conversations";
 import { Context } from "grammy";
-import { User } from "../types/Blacklist.ts";
+import { User } from "../types/User.ts";
 import { getUserByTelegramId, updateBlacklist } from "../models/user.ts";
 import { DB_FILE } from "../constants/strings.ts";
 

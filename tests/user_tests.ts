@@ -9,7 +9,7 @@ import {
   updateRating,
   userExists,
 } from "../models/user.ts";
-import { User } from "../types/Blacklist.ts";
+import { User } from "../types/User.ts";
 import { assertEquals } from "@std/assert/equals";
 import { assertObjectMatch } from "@std/assert/object-match";
 
