@@ -27,18 +27,15 @@ on [e621](https://www.e621.net).
 - **favcount** - Will get you images by favcount
 - **score** - Will get you images by score
 - **random** - Will get you random images
-- **safe** - Will get you images rated **safe**
-- **questionable** - Will get you images rated **questionable**
-- **explicit** - Will get you images rated **explicit**
 
 ## Searching with Tags and Keywords
 
 Just type your query like so `@NMDergBot dragon gryphon today random safe` they
 are not case sensitive but must be **space seperated**!
 
-The words **dragon**, **gryphon**, **today**, **random**, and **safe** will
+The words **dragon**, **gryphon**, **today**, and **random** will
 return images with **dragons** and **gryphons** in them that were uploaded
-**today** that are **randomly** ordered with a rating of **safe**
+**today** that are **randomly** ordered.
 
 Here is a list of valid [e621 tags](https://e621.net/tags), and you can mix and
 match the key words and the tags in any way you like!
@@ -105,10 +102,6 @@ include the content listed in the
 [Safe (General)](https://e621.net/help/ratings#safe) section of the
 [e621 ratings help page](https://e621.net/help/ratings). This content should be
 considered **SFW** in most settings.
-
-You can filter search results by querying for rating:s, rating:q, or rating:e
-for safe, questionable, and explicit posts, respectively. You can also combine
-them with other tags and they work as expected.
 
 ## Changeing your rating
 
