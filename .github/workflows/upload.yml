@@ -1,7 +1,7 @@
 name: Upate E621Bot
 on:
   push:
-    branches: ["master"]
+    # branches: ["master"]
 
 
 jobs:
