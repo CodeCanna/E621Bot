@@ -71,5 +71,6 @@ export const defaultBlacklist =
 
 // DB strings
 export const SQL_BASEPATH = "db/sql";
-export const DB_FILE = "db/prod_db/blacklist.db";
-export const TEST_DB_FILE = "db/test_db/blacklist_test.db";
+export const DB_BASEPATH = "db/prod_db";
+export const DB_FILE = "db/prod_db/user.db";
+export const TEST_DB_FILE = "db/test_db/user_test.db";
