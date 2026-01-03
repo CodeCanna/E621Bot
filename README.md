@@ -33,9 +33,9 @@ on [e621](https://www.e621.net).
 Just type your query like so `@NMDergBot dragon gryphon today random safe` they
 are not case sensitive but must be **space seperated**!
 
-The words **dragon**, **gryphon**, **today**, and **random** will
-return images with **dragons** and **gryphons** in them that were uploaded
-**today** that are **randomly** ordered.
+The words **dragon**, **gryphon**, **today**, and **random** will return images
+with **dragons** and **gryphons** in them that were uploaded **today** that are
+**randomly** ordered.
 
 Here is a list of valid [e621 tags](https://e621.net/tags), and you can mix and
 match the key words and the tags in any way you like!
@@ -107,6 +107,7 @@ considered **SFW** in most settings.
 
 To change your rating use `/rating [rating]` to change the rating of the images
 retrieved by the bot. Replace `[rating]` with the rating you want to set it to.
+**When you first use E621Bot the bot will default to "safe mode"**
 
 #### Available Ratings:
 
