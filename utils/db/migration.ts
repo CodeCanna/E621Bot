@@ -1,5 +1,6 @@
 import { PathLike } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
+import { E621DatabaseError } from "../../types/Error.ts";
 
 export function createUserDb(dbFile: PathLike) {
   try {
@@ -14,6 +15,7 @@ export function createUserDb(dbFile: PathLike) {
     `).run();
     db.close();
   } catch (err) {
-    console.error(`Failed to create blacklist db: ${err}`);
+    console.error(`Failed to create user db: ${err}`);
+    throw new E621DatabaseError(`Failed to create user db: ${err}`);
   }
 }
