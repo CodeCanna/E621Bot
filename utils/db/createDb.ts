@@ -1,5 +1,5 @@
 import { PathLike } from "node:fs";
-import { createUserDb } from "../migration.ts";
+import { createUserDb } from "./migration.ts";
 import { E621DatabaseError } from "../../types/Error.ts";
 
 export function createDatabase(dbFile: PathLike) {
