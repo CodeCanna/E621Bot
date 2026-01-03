@@ -1,3 +1,5 @@
+import config from "../bot_config.json" with {type: "json"};
+
 export const startString = `
 Bot Started <b>This is an <u>Explicit 18+</u> bot</b> and should only be used by <b>Those who are <u>18 years old or above</u></b> run /info for more information about this bot!
 `;
@@ -65,12 +67,7 @@ export const fileTypes = {
 };
 
 export const keywordsRegex = "(id|creator|active|inactive|category|order)";
-export const BLACKLIST_PATH = "./blacklist.txt";
-export const defaultBlacklist =
-  "gore,scat,watersports,young,-rating:s,loli,shota";
 
 // DB strings
-export const SQL_BASEPATH = "db/sql";
-export const DB_BASEPATH = "db/prod_db";
-export const DB_FILE = "db/prod_db/user.db";
-export const TEST_DB_FILE = "db/test_db/user_test.db";
+export const DB_BASEDIR = `${Deno.cwd()}/${config.db.base_directory}`;
+export const DB_FILE = `${Deno.cwd()}/${config.db.db_file}`;
