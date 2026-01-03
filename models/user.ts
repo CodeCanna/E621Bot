@@ -1,7 +1,6 @@
 import { PathLike } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
 import { User } from "../types/User.ts";
-import { defaultBlacklist } from "../constants/strings.ts";
 import { E621DatabaseError } from "../types/Error.ts";
 
 /**
@@ -127,8 +126,7 @@ export function getUserByTelegramId(
         id: Number(queryResult.id),
         telegramId: Number(queryResult.telegram_id),
         rating: String(queryResult.rating),
-        blacklist: String(queryResult.blacklist).split(",") ||
-          defaultBlacklist.split(","),
+        blacklist: String(queryResult.blacklist).split(","),
       };
     }
   } catch (err) {
